@@ -1,0 +1,41 @@
+.toolbox-top {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.canvas-editor {
+    padding: 0px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.canvas-container {
+    flex-grow: 1;
+}
+
+.settings {
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    background-color: var(--background-neutral-container);
+    padding: 24px 8px;
+    border-radius: 4px;
+    text-align: left;
+
+    &:empty {
+        padding: 0;
+    }
+}
+
+.btn-teal {
+    background-color: #1cc7b7;
+    color: white;
+    border: none;
+}
+
+.btn-teal:hover {
+    background-color: #17a2a2;
+}

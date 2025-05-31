@@ -1,0 +1,30 @@
+body {
+    background-color: #ffffff;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+.center-text {
+    display: flex;
+    justify-content: center; /* horizontal */
+    align-items: center;     /* vertical */
+    text-align: center;
+    height: 100%;            /* pastikan div punya tinggi */
+}
+
+.link-button{
+    cursor: pointer;
+}
+
+.link-button :hover{
+    color: var(--primary-color);
+}
+
+.link-button .active{
+  color: var(--primary-color);
+}
+
+.active{
+  color: var(--primary-color);
+}
