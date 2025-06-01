@@ -31,6 +31,14 @@ const TooltipTransforms = () => {
     dispatch(setSkewY(value));  
   }
 
+  const handleFilipYClick = () =>{
+    dispatch(setFlipY(!flipY));  
+  }
+
+  const handleFilipXClick = () =>{
+    dispatch(setFlipX(!flipX));  
+  }
+
   return (
     <OverlayTrigger
       trigger="click"
@@ -41,27 +49,27 @@ const TooltipTransforms = () => {
           <Popover.Body>
             <div className='row'>
               <div className='col-3'><label>Rotate</label></div>
-              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={rotate} onChange={handleRotateChange} min={"0"} max={"100"} step={"1"} style={{ marginRight: 5 }} /><span>0º</span></div>
+              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={rotate} onChange={handleRotateChange} min={"0"} max={"100"} step={"1"} style={{ marginRight: 5 }} /><span>{rotate}º</span></div>
             </div>
             <div className='row'>
               <div className='col-3'><label>Skew&nbsp;X</label></div>
-              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={skewX} onChange={handleSkewXChange} min={"0"} max={"100"} style={{ marginRight: 5 }} /><span>0&nbsp;</span></div>
+              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={skewX} onChange={handleSkewXChange} min={"0"} max={"100"} style={{ marginRight: 5 }} /><span>{skewX}&nbsp;</span></div>
             </div>
             <div className='row'>
               <div className='col-3'><label>Skew&nbsp;Y</label></div>
-              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={skewY} onChange={handleSkewYChange} min={"0"} max={"100"} style={{ marginRight: 5 }} /><span>0&nbsp;</span></div>
+              <div className='col-9 d-flex'><input type="range" className="form-range" defaultValue={skewY} onChange={handleSkewYChange} min={"0"} max={"100"} style={{ marginRight: 5 }} /><span>{skewY}&nbsp;</span></div>
             </div>
             <div className='row'>
               <div className='col-6'>
                 <div className="form-check form-switch">
-                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Filp X</label>
-                  <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                  <label className="form-check-label" >Filp X</label>
+                  <input className="form-check-input" type="checkbox" onChange={handleFilipXClick} checked={flipX} value={flipX} role="switch"/>
                 </div>
               </div>
               <div className='col-6'>
                 <div className="form-check form-switch">
-                  <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Filp Y</label>
-                  <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                  <label className="form-check-label">Filp Y</label>
+                  <input className="form-check-input" type="checkbox" onChange={handleFilipYClick} checked={flipY} value={flipY} role="switch"/>
                 </div>
               </div>
             </div>
