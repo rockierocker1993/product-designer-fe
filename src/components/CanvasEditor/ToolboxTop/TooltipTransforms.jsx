@@ -31,11 +31,11 @@ const TooltipTransforms = () => {
     dispatch(setSkewY(value));  
   }
 
-  const handleFilipYClick = () =>{
+  const handleFilipYChange = () =>{
     dispatch(setFlipY(!flipY));  
   }
 
-  const handleFilipXClick = () =>{
+  const handleFilipXChange = () =>{
     dispatch(setFlipX(!flipX));  
   }
 
@@ -63,13 +63,13 @@ const TooltipTransforms = () => {
               <div className='col-6'>
                 <div className="form-check form-switch">
                   <label className="form-check-label" >Filp X</label>
-                  <input className="form-check-input" type="checkbox" onChange={handleFilipXClick} checked={flipX} value={flipX} role="switch"/>
+                  <input className="form-check-input" type="checkbox" onChange={handleFilipXChange} checked={flipX} value={flipX} role="switch"/>
                 </div>
               </div>
               <div className='col-6'>
                 <div className="form-check form-switch">
                   <label className="form-check-label">Filp Y</label>
-                  <input className="form-check-input" type="checkbox" onChange={handleFilipYClick} checked={flipY} value={flipY} role="switch"/>
+                  <input className="form-check-input" type="checkbox" onChange={handleFilipYChange} checked={flipY} value={flipY} role="switch"/>
                 </div>
               </div>
             </div>
