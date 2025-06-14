@@ -28,3 +28,23 @@ body {
 .active{
   color: var(--primary-color);
 }
+
+.top-left-deg {
+  transform: rotate(-45deg);
+}
+
+.top-right-deg {
+  transform: rotate(45deg);
+}
+
+.bottom-left-deg {
+  transform: rotate(-135deg);
+}
+
+.bottom-right-deg {
+  transform: rotate(135deg);
+}
+
+.right-deg {
+  transform: rotate(90deg);
+}

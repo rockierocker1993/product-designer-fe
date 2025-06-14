@@ -7,10 +7,10 @@ import { Button, IconButton } from "blocksin-system";
 import { useDispatch, useSelector } from "react-redux";
 import { resetStateAddShapes } from "../../store/components/Sidebar/ShapesSlice";
 import {
-  centerVertical, resetCenterVertical, centerHorizontal, resetCenterHorizontal,
-  topLeft, resetTopLeft, topRight, resetTopright, topCenter, resetTopCenter,
-  middleLeft, resetMiddleLeft, middleRight, resetMiddleRight, middleCenter, resetMiddleCenter, 
-  bottomLeft, resetBottomLeft, bottomRight, resetBottomRight, bottomCenter, resetBottomCenter, 
+  moveToCenterVertical, resetCenterVertical, moveToCenterHorizontal, resetCenterHorizontal,
+  moveToTopLeft, resetTopLeft, moveToTopRight, resetTopright, moveToTopCenter, resetTopCenter,
+  moveToMiddleLeft, resetMiddleLeft, moveToMiddleRight, resetMiddleRight, moveToMiddleCenter, resetMiddleCenter, 
+  moveToBottomLeft, resetBottomLeft, moveToBottomRight, resetBottomRight, moveToBottomCenter, resetBottomCenter, 
   lockObject, unlockObject
 } from '../../store/components/CanvasEditor/ToolBoxTop/TooltipPositionSlice.jsx'
 

@@ -4,77 +4,77 @@ const tooltipPositionSlice = createSlice({
   name: 'tooltipTransform',
   initialState: { centerVertical: true, centerHorizontal: false, topLeft: false, topRight: false, topCenter: false, middleLeft: false, middleRight: false, middleCenter: false, bottomLeft: false, bottomRight: false, bottomCenter: false, isLockObject: false },
   reducers: {
-    centerVertical: (state, action) => {
+    moveToCenterVertical: (state, action) => {
       state.centerVertical = true;
     },
     resetCenterVertical: (state) => {
       state.centerVertical = false;
     },
 
-    centerHorizontal: (state) => {
+    moveToCenterHorizontal: (state) => {
       state.centerHorizontal = true;
     },
     resetCenterHorizontal: (state, action) => {
       state.centerHorizontal = false;
     },
 
-    topLeft: (state) => {
+    moveToTopLeft: (state) => {
       state.topLeft = true;
     },
     resetTopLeft: (state, action) => {
       state.topLeft = false;
     },
 
-    topRight: (state) => {
+    moveToTopRight: (state) => {
       state.topRight = true;
     },
     resetTopright: (state) => {
       state.topRight = false;
     },
 
-    topCenter: (state) => {
+    moveToTopCenter: (state) => {
       state.topCenter = true;
     },
     resetTopCenter: (state) => {
       state.topCenter = false;
     },
 
-    middleLeft: (state) => {
+    moveToMiddleLeft: (state) => {
       state.middleLeft = true;
     },
     resetMiddleLeft: (state) => {
       state.middleLeft = false;
     },
 
-    middleRight: (state) => {
+    moveToMiddleRight: (state) => {
       state.middleRight = true;
     },
     resetMiddleRight: (state) => {
       state.middleRight = false;
     },
 
-    middleCenter: (state) => {
+    moveToMiddleCenter: (state) => {
       state.middleCenter = true;
     },
     resetMiddleCenter: (state) => {
       state.middleCenter = false;
     },
 
-    bottomLeft: (state) => {
+    moveToBottomLeft: (state) => {
       state.bottomLeft = true;
     },
     resetBottomLeft: (state) => {
       state.bottomLeft = false;
     },
 
-    bottomRight: (state) => {
+    moveToBottomRight: (state) => {
       state.bottomRight = true;
     },
     resetBottomRight: (state) => {
       state.bottomRight = false;
     },
 
-    bottomCenter: (state) => {
+    moveToBottomCenter: (state) => {
       state.bottomCenter = true;
     },
     resetBottomCenter: (state) => {
@@ -92,29 +92,29 @@ const tooltipPositionSlice = createSlice({
 })
 
 export const {
-  centerVertical,
+  moveToCenterVertical,
   resetCenterVertical,
-  centerHorizontal,
+  moveToCenterHorizontal,
   resetCenterHorizontal,
-  topLeft,
+  moveToTopLeft,
   resetTopLeft,
-  topRight,
+  moveToTopRight,
   resetTopright,
-  topCenter,
+  moveToTopCenter,
   resetTopCenter,
-  middleLeft,
+  moveToMiddleLeft,
   resetMiddleLeft,
-  middleRight,
+  moveToMiddleRight,
   resetMiddleRight,
-  middleCenter,
+  moveToMiddleCenter,
   resetMiddleCenter,
-  bottomLeft,
+  moveToBottomLeft,
   resetBottomLeft,
-  bottomRight,
+  moveToBottomRight,
   resetBottomRight,
-  bottomCenter,
+  moveToBottomCenter,
   resetBottomCenter,
   lockObject,
   unlockObject
-} = tooltipTransformsSlice.actions;
+} = tooltipPositionSlice.actions;
 export default tooltipPositionSlice.reducer;

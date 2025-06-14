@@ -39,3 +39,13 @@
 .btn-teal:hover {
     background-color: #17a2a2;
 }
+
+.btn-position {
+    cursor: pointer;
+}
+
+.btn-position :hover{
+    color: var(--primary-color);
+    background-color: #f3f3f3;
+}
+
