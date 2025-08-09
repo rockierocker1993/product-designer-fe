@@ -49,3 +49,11 @@
     background-color: #f3f3f3;
 }
 
+
+.transform-progressbar{
+    padding-right: 5px !important;
+}
+
+.transform-value{
+    padding-left: 0px !important;
+}

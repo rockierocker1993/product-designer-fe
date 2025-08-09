@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { IconButton } from "blocksin-system";
-import { addShapes } from "../../store/components/Sidebar/ShapesSlice";
+import { addCanvasItem } from "../../store/components/AddCanvasItemSlice";
 
 const Product = ({ shapesAction }) => {
     const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const Product = ({ shapesAction }) => {
             <label className="form-label text-white">XL</label>
             <input type="number" className="form-control form-control-sm" />
         </div>
-        <IconButton onClick={() => dispatch(addShapes('rect'))}>Circle</IconButton>
+        <IconButton onClick={() => dispatch(addCanvasItem('rectangle'))}>Rectangle</IconButton>
     </div>)
 };
 
