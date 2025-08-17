@@ -209,94 +209,87 @@ object.setControlsVisibility({
     }
   }
 
-  function renderTransformControlIcon(svgString, prop) {
-    return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-      const img = new Image();
-      const tablerIcon = renderTablerSvgIcon(svgString, prop);
+  const iconCache = {};
 
+  function renderTransformControlIcon(svgString, prop) {
+    if (!iconCache[svgString]) {
+      const tablerIcon = renderTablerSvgIcon(svgString, prop);
       const svg = new Blob([tablerIcon], { type: "image/svg+xml" });
       const url = URL.createObjectURL(svg);
 
-      img.onload = function () {
-        ctx.save();
-        ctx.translate(left, top);
-        ctx.drawImage(img, -prop.size / 2, -prop.size / 2, prop.size, prop.size);
-        ctx.restore();
-        URL.revokeObjectURL(url);
-      };
-
+      const img = new Image();
       img.src = url;
+      iconCache[svgString] = img;
+    }
+
+    return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+      const img = iconCache[svgString];
+      if (!img.complete) return; // tunggu load
+
+      ctx.save();
+
+      // pastikan ukuran tetap, tidak ikut scale/zoom object
+      const zoom = fabricObject.canvas.getZoom();
+      ctx.translate(left, top);
+      ctx.scale(1 / zoom, 1 / zoom);
+
+      ctx.drawImage(img, -prop.size / 2, -prop.size / 2, prop.size, prop.size);
+
+      ctx.restore();
     };
   }
 
   function customTransformControl() {
-    fabric.Object.prototype.controls.deleteControl = new fabric.Control({
-      x: -0.5,
-      y: -0.5,
-      offsetX: -10,
-      offsetY: -10,
-      cursorStyle: "pointer",
-      mouseUpHandler: function (eventData, transform) {
-        const target = transform.target;
-        target.canvas.remove(target);
-        target.canvas.requestRenderAll();
-      },
-      render: renderTransformControlIcon(TABLER_ICONS.DELETE, { size: 11, color: 'black' }),
-      cornerSize: 24,
-    });
+  // DELETE
+  fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+    x: -0.5, y: -0.5,
+    cursorStyle: "pointer",
+    mouseUpHandler: (evt, transform) => {
+      const target = transform.target;
+      target.canvas.remove(target);
+      target.canvas.requestRenderAll();
+    },
+    render: renderTransformControlIcon(TABLER_ICONS.DELETE, { size: 24, color: 'black' }),
+    cornerSize: 30
+  });
 
-    // DUPLICATE CONTROL
-    fabric.Object.prototype.controls.duplicateControl = new fabric.Control({
-      x: -0.5,
-      y: 0.5,
-      offsetX: -8,
-      offsetY: 8,
-      cursorStyle: 'pointer',
-      mouseUpHandler: function (eventData, transform) {
-        const target = transform.target;
-        target.clone(function (clone) {
-          clone.set({
-            left: target.left + 20,
-            top: target.top + 20
-          });
-          target.canvas.add(clone);
-          target.canvas.setActiveObject(clone);
-        });
-      },
-      render: renderTransformControlIcon(TABLER_ICONS.DUPLICATE, { size: 11, color: 'black' }),
-      cornerSize: 24
-    });
+  // DUPLICATE
+  fabric.Object.prototype.controls.duplicateControl = new fabric.Control({
+    x: -0.5, y: 0.5,
+    cursorStyle: 'pointer',
+    mouseUpHandler: (evt, transform) => {
+      const target = transform.target;
+      target.clone(clone => {
+        clone.set({ left: target.left + 20, top: target.top + 20 });
+        target.canvas.add(clone);
+        target.canvas.setActiveObject(clone);
+      });
+    },
+    render: renderTransformControlIcon(TABLER_ICONS.DUPLICATE, { size: 24, color: 'black' }),
+    cornerSize: 30
+  });
 
-    // ROTATE CONTROL (kanan atas)
-    fabric.Object.prototype.controls.rotateCustom = new fabric.Control({
-      x: 0.5,
-      y: -0.5,
-      offsetX: 8,
-      offsetY: -8,
-      cursorStyle: 'crosshair',
-      actionHandler: fabric.controlsUtils.rotationWithSnapping,
-      actionName: 'rotate',
-      render: renderTransformControlIcon(TABLER_ICONS.ROTATE, { size: 11, color: 'black' }),
-      cornerSize: 24
-    });
+  // ROTATE
+  fabric.Object.prototype.controls.rotateCustom = new fabric.Control({
+    x: 0.5, y: -0.5,
+    cursorStyle: 'crosshair',
+    actionHandler: fabric.controlsUtils.rotationWithSnapping,
+    actionName: 'rotate',
+    render: renderTransformControlIcon(TABLER_ICONS.ROTATE, { size: 24, color: 'black' }),
+    cornerSize: 30
+  });
 
-    fabric.Object.prototype.controls.customResize = new fabric.Control({
-      x: 0.5,   // posisi kanan
-      y: 0.5,   // posisi bawah
-      cursorStyle: 'se-resize',
-      actionHandler: fabric.controlsUtils.scalingEqually,  // resize proportional
-      actionName: 'resize',
-      render: function (ctx, left, top, styleOverride, fabricObject) {
-        ctx.save();
-        ctx.fillStyle = 'red'; // warna handle
-        ctx.beginPath();
-        ctx.arc(left, top, 6, 0, 2 * Math.PI); // bulat
-        ctx.fill();
-        ctx.restore();
-      }
-    });
-    
-  }
+  // RESIZE (satu-satunya)
+  fabric.Object.prototype.controls.customResize = new fabric.Control({
+    x: 0.5, y: 0.5,
+    cursorStyle: 'se-resize',
+    actionHandler: fabric.controlsUtils.scalingEqually,
+    actionName: 'resize',
+    render: renderTransformControlIcon(TABLER_ICONS.RESIZE, { size: 24, color: 'black' }),
+    cornerSize: 30
+  });
+}
+
 
 
 
