@@ -3,7 +3,10 @@ import TooltipTransforms from "./TooltipTransforms";
 import TooltipPosition from "./TooltipPosition";
 import TooltipFillOptions from "./TooltipFillOptions";
 
-function ToolboxTop({ onTransform }) {
+function ToolboxTop({ 
+  onTransform, 
+  onPosition
+}) {
 
 
   return <div className="toolbox-top d-flex justify-content-between align-items-center bg-white">
@@ -18,7 +21,9 @@ function ToolboxTop({ onTransform }) {
     </div>
     <div>
       <TooltipFillOptions></TooltipFillOptions>
-      <TooltipPosition></TooltipPosition>
+      <TooltipPosition
+        onPosition={onPosition}
+      ></TooltipPosition>
       <TooltipTransforms
         onTransform={onTransform}
       ></TooltipTransforms>
