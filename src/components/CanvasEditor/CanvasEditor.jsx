@@ -240,55 +240,55 @@ object.setControlsVisibility({
   }
 
   function customTransformControl() {
-  // DELETE
-  fabric.Object.prototype.controls.deleteControl = new fabric.Control({
-    x: -0.5, y: -0.5,
-    cursorStyle: "pointer",
-    mouseUpHandler: (evt, transform) => {
-      const target = transform.target;
-      target.canvas.remove(target);
-      target.canvas.requestRenderAll();
-    },
-    render: renderTransformControlIcon(TABLER_ICONS.DELETE, { size: 24, color: 'black' }),
-    cornerSize: 30
-  });
+    // DELETE
+    fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+      x: -0.5, y: -0.5,
+      cursorStyle: "pointer",
+      mouseUpHandler: (evt, transform) => {
+        const target = transform.target;
+        target.canvas.remove(target);
+        target.canvas.requestRenderAll();
+      },
+      render: renderTransformControlIcon(TABLER_ICONS.TRANSFORM_CONTROL_DELETE, { size: 24, color: 'red' }),
+      cornerSize: 30
+    });
 
-  // DUPLICATE
-  fabric.Object.prototype.controls.duplicateControl = new fabric.Control({
-    x: -0.5, y: 0.5,
-    cursorStyle: 'pointer',
-    mouseUpHandler: (evt, transform) => {
-      const target = transform.target;
-      target.clone(clone => {
-        clone.set({ left: target.left + 20, top: target.top + 20 });
-        target.canvas.add(clone);
-        target.canvas.setActiveObject(clone);
-      });
-    },
-    render: renderTransformControlIcon(TABLER_ICONS.DUPLICATE, { size: 24, color: 'black' }),
-    cornerSize: 30
-  });
+    // DUPLICATE
+    fabric.Object.prototype.controls.duplicateControl = new fabric.Control({
+      x: -0.5, y: 0.5,
+      cursorStyle: 'pointer',
+      mouseUpHandler: (evt, transform) => {
+        const target = transform.target;
+        target.clone(clone => {
+          clone.set({ left: target.left + 20, top: target.top + 20 });
+          target.canvas.add(clone);
+          target.canvas.setActiveObject(clone);
+        });
+      },
+      render: renderTransformControlIcon(TABLER_ICONS.TRANSFORM_CONTROL_DUPLICATE, { size: 24, color: '#007aff' }),
+      cornerSize: 30
+    });
 
-  // ROTATE
-  fabric.Object.prototype.controls.rotateCustom = new fabric.Control({
-    x: 0.5, y: -0.5,
-    cursorStyle: 'crosshair',
-    actionHandler: fabric.controlsUtils.rotationWithSnapping,
-    actionName: 'rotate',
-    render: renderTransformControlIcon(TABLER_ICONS.ROTATE, { size: 24, color: 'black' }),
-    cornerSize: 30
-  });
+    // ROTATE
+    fabric.Object.prototype.controls.rotateCustom = new fabric.Control({
+      x: 0.5, y: -0.5,
+      cursorStyle: 'crosshair',
+      actionHandler: fabric.controlsUtils.rotationWithSnapping,
+      actionName: 'rotate',
+      render: renderTransformControlIcon(TABLER_ICONS.TRANSFORM_CONTROL_ROTATE, { size: 24, color: '#ff9500' }),
+      cornerSize: 30
+    });
 
-  // RESIZE (satu-satunya)
-  fabric.Object.prototype.controls.customResize = new fabric.Control({
-    x: 0.5, y: 0.5,
-    cursorStyle: 'se-resize',
-    actionHandler: fabric.controlsUtils.scalingEqually,
-    actionName: 'resize',
-    render: renderTransformControlIcon(TABLER_ICONS.RESIZE, { size: 24, color: 'black' }),
-    cornerSize: 30
-  });
-}
+    // RESIZE (satu-satunya)
+    fabric.Object.prototype.controls.customResize = new fabric.Control({
+      x: 0.5, y: 0.5,
+      cursorStyle: 'se-resize',
+      actionHandler: fabric.controlsUtils.scalingEqually,
+      actionName: 'resize',
+      render: renderTransformControlIcon(TABLER_ICONS.TRANSFORM_CONTROL_RESIZE, { size: 24, color: '#4cd964' }),
+      cornerSize: 30
+    });
+  }
 
 
 
