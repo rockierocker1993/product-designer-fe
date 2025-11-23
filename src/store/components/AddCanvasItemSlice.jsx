@@ -4,14 +4,38 @@ const addCanvasItemSlice = createSlice({
     name: 'addCanvasItem',
     initialState: { canvasItem: null },
     reducers: {
-        addCanvasItem: (state, action) => {
+        addShapesItem: (state, action) => {
             state.canvasItem = action.payload;
         },
-        breakStateAddCanvasItem: (state) => {
+        addProductItem: (state, action) => {
+            state.canvasItem = action.payload;
+        },
+        addImageItem: (state, action) => {
+            state.canvasItem = action.payload;
+        },
+        addTextItem: (state, action) => {
+            state.canvasItem = action.payload;
+        },
+        addTemplateItem: (state, action) => {
+            state.canvasItem = action.payload;
+        },
+        addClipartItem: (state, action) => {
+            state.canvasItem = action.payload;
+        },
+        breakStateAddShapesItem: (state) => {
             state.canvasItem = null;
         },
     }
 })
 
-export const { addCanvasItem, breakStateAddCanvasItem } = addCanvasItemSlice.actions;
+export const { 
+    addShapesItem, 
+    addProductItem,
+    addImageItem,
+    addTextItem,
+    addTemplateItem,
+    addClipartItem,
+    breakStateAddShapesItem 
+} = addCanvasItemSlice.actions;
+
 export default addCanvasItemSlice.reducer;

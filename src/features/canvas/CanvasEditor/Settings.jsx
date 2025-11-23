@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Input } from 'blocksin-system';
 
 function Settings({ canvas }) {
     const [selectedObject, setSelectedObject] = useState(null);

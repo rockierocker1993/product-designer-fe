@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Image, OverlayTrigger, Popover } from "react-bootstrap";
 import TooltipTransforms from "./TooltipTransforms";
 import TooltipPosition from "./TooltipPosition";
@@ -7,7 +8,11 @@ function ToolboxTop({
   onTransform, 
   onPosition
 }) {
+  const [activePopover, setActivePopover] = useState(null);
 
+  const handlePopoverToggle = (popoverName) => {
+    setActivePopover(prevActive => prevActive === popoverName ? null : popoverName);
+  };
 
   return <div className="toolbox-top d-flex justify-content-between align-items-center bg-white">
     <div className="d-flex align-items-center gap-3">
@@ -20,13 +25,20 @@ function ToolboxTop({
       </nav>
     </div>
     <div>
-      <TooltipFillOptions></TooltipFillOptions>
+      <TooltipFillOptions
+        isOpen={activePopover === 'fill'}
+        onToggle={() => handlePopoverToggle('fill')}
+      />
       <TooltipPosition
         onPosition={onPosition}
-      ></TooltipPosition>
+        isOpen={activePopover === 'position'}
+        onToggle={() => handlePopoverToggle('position')}
+      />
       <TooltipTransforms
         onTransform={onTransform}
-      ></TooltipTransforms>
+        isOpen={activePopover === 'transform'}
+        onToggle={() => handlePopoverToggle('transform')}
+      />
     </div>
   </div>
 }

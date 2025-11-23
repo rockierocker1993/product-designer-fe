@@ -1,4 +1,41 @@
 :root {
-    --primary-color: #FE7743;
+    /* Colors will be set dynamically from theme.js */
+    --primary-color: #084D42;
+    --secondary-color: #0a5f51;
+    --accent-color: #FE7743;
+    
+    --bg-light: #ffffff;
+    --bg-dark: #1a1a1a;
+    --bg-neutral: #f5f5f5;
+    --bg-canvas: #ffffff;
+    --bg-primary: #ffffff;
+    
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b7280;
+    --text-light: #ffffff;
+    --text-color: #1a1a1a;
+    
+    --border-color: #e5e7eb;
+    --border-focus: #084D42;
+    
+    --success-color: #10B981;
+    --warning-color: #F59E0B;
+    --error-color: #E5484D;
+    --info-color: #3B82F6;
+    
     --font-base: 'Roboto', sans-serif;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --bg-primary: var(--bg-dark);
+    --text-color: var(--text-light);
+    --border-color: #374151;
+}
+
+/* Light theme */
+[data-theme="light"] {
+    --bg-primary: var(--bg-light);
+    --text-color: var(--text-primary);
+    --border-color: #e5e7eb;
 }

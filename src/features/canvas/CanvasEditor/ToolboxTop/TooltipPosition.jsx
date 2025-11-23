@@ -1,20 +1,33 @@
+import React, { useState } from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpDownLeftRight, faArrowsToCircle, faArrowsUpDown, faArrowUp, faArrowDown, faArrowRight, faArrowLeft, faArrowTurnDown } from '@fortawesome/free-solid-svg-icons'
+import { 
+  Move, 
+  MoveVertical, 
+  MoveHorizontal,
+  ArrowUp, 
+  ArrowDown, 
+  ArrowLeft, 
+  ArrowRight,
+  ArrowUpLeft,
+  ArrowUpRight,
+  ArrowDownLeft,
+  ArrowDownRight,
+  Circle
+} from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { lockObject, unlockObject } from '../../../store/components/CanvasEditor/ToolBoxTop/TooltipPositionSlice'
+import { lockObject, unlockObject } from '../../../../store/components/CanvasEditor/ToolBoxTop/TooltipPositionSlice'
 import {
   CENTER_VERTICAL, CENTER_HORIZONTAL,
   TOP_LEFT, TOP_RIGHT, TOP_CENTER,
   MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT,
   BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
-} from "../../../constant";
+} from "../../../../constant";
 
 const TooltipPosition = ({
-  onPosition
+  onPosition,
+  isOpen,
+  onToggle
 }) => {
-  library.add(faUpDownLeftRight, faArrowsToCircle, faArrowsUpDown, faArrowUp, faArrowDown, faArrowRight, faArrowLeft, faArrowTurnDown);
   const dispatch = useDispatch();
   const isLockObject = useSelector((state) => state.tooltipPosition.isLockObject);
 
@@ -86,6 +99,8 @@ const TooltipPosition = ({
       trigger="click"
       placement="bottom"
       key="tooltipPosition"
+      show={isOpen}
+      onToggle={onToggle}
       overlay={
         <Popover>
           <Popover.Body>
@@ -103,21 +118,21 @@ const TooltipPosition = ({
                 <div className='row mb-3'>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToCenterVertical}>
-                      <FontAwesomeIcon icon='fa-arrows-up-down' size="lg" style={{ marginBottom: '5px' }} />
+                      <MoveVertical size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToTopLeft}>
-                      <FontAwesomeIcon className='top-left-deg' icon='fa-arrow-up' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowUpLeft size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToTopCenter}>
-                      <FontAwesomeIcon icon='fa-arrow-up' size="lg" style={{ marginBottom: '5px' }} /></a>
+                      <ArrowUp size={20} style={{ color: 'var(--primary-color, #2196F3)' }} /></a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToTopRight}>
-                      <FontAwesomeIcon className='top-right-deg' icon='fa-arrow-up' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowUpRight size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                 </div>
@@ -125,22 +140,22 @@ const TooltipPosition = ({
                 <div className='row mb-3'>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToCenterHorizontal}>
-                      <FontAwesomeIcon className='right-deg' icon='fa-arrows-up-down' size="lg" style={{ marginBottom: '5px' }} />
+                      <MoveHorizontal size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToMiddleLeft}>
-                      <FontAwesomeIcon icon='fa-arrow-left' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowLeft size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToMiddleCenter}>
-                      <FontAwesomeIcon icon='fa-arrows-to-circle' size="lg" style={{ marginBottom: '5px' }} />
+                      <Circle size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToMiddleRight}>
-                      <FontAwesomeIcon icon='fa-arrow-right' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowRight size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                 </div>
@@ -149,17 +164,17 @@ const TooltipPosition = ({
                   <div className='col-3 text-center'> </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToBottomLeft}>
-                      <FontAwesomeIcon className='bottom-left-deg' icon='fa-arrow-up' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowDownLeft size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToBottomCenter}>
-                      <FontAwesomeIcon icon='fa-arrow-down' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowDown size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                   <div className='col-3 text-center'>
                     <a className='btn-position' onClick={moveToBottomRight}>
-                      <FontAwesomeIcon className='bottom-right-deg' icon='fa-arrow-up' size="lg" style={{ marginBottom: '5px' }} />
+                      <ArrowDownRight size={20} style={{ color: 'var(--primary-color, #2196F3)' }} />
                     </a>
                   </div>
                 </div>
@@ -169,8 +184,8 @@ const TooltipPosition = ({
         </Popover>
       }
     >
-      <a className="link-button me-3">
-        <FontAwesomeIcon icon='up-down-left-right' size="lg" />
+      <a className={`link-button me-3 ${isOpen ? 'active' : ''}`}>
+        <Move size={20} />
       </a>
     </OverlayTrigger>
   );

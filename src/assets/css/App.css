@@ -1,9 +1,35 @@
 body {
-    background-color: #ffffff;
+    background-color: var(--bg-primary, #ffffff);
+    color: var(--text-color, #1a1a1a);
     overflow: hidden;
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light theme specific */
+body.theme-light {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+/* Dark theme specific */
+body.theme-dark {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+}
+
+body.theme-dark .bg-light {
+    background-color: var(--bg-dark) !important;
+}
+
+body.theme-dark .bg-white {
+    background-color: #2d2d2d !important;
+}
+
+body.theme-dark .text-dark {
+    color: var(--text-light) !important;
 }
 .center-text {
     display: flex;

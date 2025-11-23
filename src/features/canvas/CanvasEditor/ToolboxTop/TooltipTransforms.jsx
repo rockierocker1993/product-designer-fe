@@ -1,13 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSliders } from '@fortawesome/free-solid-svg-icons'
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { SlidersHorizontal } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setRotate, setSkewY, setSkewX, setFlipY, setFlipX } from '../../../store/components/CanvasEditor/ToolBoxTop/TooltipTransformSlice';
+import { setRotate, setSkewY, setSkewX, setFlipY, setFlipX } from '../../../../store/components/CanvasEditor/ToolBoxTop/TooltipTransformSlice';
 
-const TooltipTransforms = ({ onTransform }) => {
-  library.add(faSliders);
+const TooltipTransforms = ({ onTransform, isOpen, onToggle }) => {
 
   //redux concept
   const dispatch = useDispatch();
@@ -98,6 +95,8 @@ const TooltipTransforms = ({ onTransform }) => {
       trigger="click"
       placement="bottom"
       key="tooltipTransform"
+      show={isOpen}
+      onToggle={onToggle}
       overlay={
         <Popover>
           <Popover.Body>
@@ -164,8 +163,8 @@ const TooltipTransforms = ({ onTransform }) => {
         </Popover>
       }
     >
-      <a className="link-button active">
-        <FontAwesomeIcon icon='sliders' size="lg" />
+      <a className={`link-button ${isOpen ? 'active' : ''}`}>
+        <SlidersHorizontal size={20} />
       </a>
     </OverlayTrigger>
   );
