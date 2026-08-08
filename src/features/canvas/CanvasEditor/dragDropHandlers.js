@@ -45,7 +45,7 @@ export const handleDrop = async (e, canvas) => {
         top: y,
         height: 60,
         width: 100,
-        fill: "#084D42"
+        fill: "#000000ff"
       });
     }
   } catch (err) {

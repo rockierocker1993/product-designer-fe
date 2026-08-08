@@ -10,7 +10,7 @@ const ZoomControl = ({ canvas }) => {
     const scaleValue = scale / 100;
     
     // Scale the wrapper that contains both canvas and t-shirt
-    const wrapper = document.querySelector('.canvas-tshirt-wrapper');
+    const wrapper = document.querySelector('.canvas-wrapper');
     
     if (wrapper) {
       wrapper.style.transform = `scale(${scaleValue})`;
@@ -18,6 +18,35 @@ const ZoomControl = ({ canvas }) => {
       wrapper.style.transition = 'transform 0.2s ease';
     }
   }, [scale, canvas]);
+
+  // Handle mouse wheel scroll for zoom
+  useEffect(() => {
+    if (!canvas) return;
+
+    const handleWheel = (e) => {
+      // Check if Ctrl key is pressed (or Cmd on Mac)
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        
+        // Determine zoom direction
+        const delta = e.deltaY > 0 ? -5 : 5; // Scroll down = zoom out, scroll up = zoom in
+        
+        setScale(prev => {
+          const newScale = prev + delta;
+          return Math.max(50, Math.min(200, newScale)); // Clamp between 50% and 200%
+        });
+      }
+    };
+
+    const canvasContainer = document.getElementById('canvasContainer');
+    if (canvasContainer) {
+      canvasContainer.addEventListener('wheel', handleWheel, { passive: false });
+      
+      return () => {
+        canvasContainer.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, [canvas]);
 
   const handleScaleUp = () => {
     setScale(prev => Math.min(prev + 10, 200)); // Max 200%

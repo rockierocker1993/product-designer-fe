@@ -114,7 +114,6 @@ const Shape = () => {
                 />
               )}
             </div>
-            <div className="item-name">{shape.name}</div>
           </div>
         ))}
       </div>

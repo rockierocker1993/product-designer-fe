@@ -67,9 +67,106 @@
 
 .menu-detail{
     padding: 20px;
-    max-width: 350px;
-    min-width: 350px;
+    max-width: 250px;
+    min-width: 250px;
     border-right: 1px solid var(--bs-border-color);
+}
+
+/* ========================================
+   SIDEBAR PANEL (CANVA-STYLE)
+   ======================================== */
+
+.sidebar-panel {
+    width: 300px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.sidebar-panel.hover {
+    position: absolute;
+    left: 80px;
+    top: 0;
+    z-index: 100;
+}
+
+.sidebar-panel.pinned {
+    position: relative;
+}
+
+.sidebar-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #ffffff;
+    min-height: 64px;
+}
+
+.sidebar-panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.sidebar-collapse-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.sidebar-collapse-btn:hover {
+    background: #e5e7eb;
+    color: #084D42;
+}
+
+.sidebar-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-panel-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar-panel-content::-webkit-scrollbar-track {
+    background: #f9fafb;
+}
+
+.sidebar-panel-content::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.sidebar-panel-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
 }
 
 /* ========================================
@@ -317,7 +414,7 @@
 
 /* Shapes grid */
 .shapes-grid {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 /* ========================================
@@ -363,7 +460,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 2px;
   background: #ffffff;
   position: relative;
 }
