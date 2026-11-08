@@ -1,15 +1,13 @@
-import { apiRequest } from './apiUtils';
-import { API_CONFIG } from '../config';
+import { createResourceApi } from './resourceApiFactory';
 
-const API_BASE_URL = API_CONFIG.BASE_URL;
+const productsApi = createResourceApi({ resourcePath: 'products' });
 
 /**
  * Fetch all products
  * @returns {Promise<Array>} List of products
  */
 export const fetchProductsList = async () => {
-  const response = await apiRequest(`${API_BASE_URL}/products`);
-  return response.data || [];
+  return productsApi.fetchList();
 };
 
 /**
@@ -18,8 +16,7 @@ export const fetchProductsList = async () => {
  * @returns {Promise<Object>} Product data
  */
 export const fetchProductById = async (id) => {
-  const response = await apiRequest(`${API_BASE_URL}/products/${id}`);
-  return response.data;
+  return productsApi.fetchById(id);
 };
 
 /**
@@ -28,8 +25,7 @@ export const fetchProductById = async (id) => {
  * @returns {Promise<Array>} List of products in category
  */
 export const fetchProductsByCategory = async (category) => {
-  const response = await apiRequest(`${API_BASE_URL}/products/category/${category}`);
-  return response.data || [];
+  return productsApi.fetchByCategory(category);
 };
 
 /**
@@ -38,6 +34,5 @@ export const fetchProductsByCategory = async (category) => {
  * @returns {Promise<Array>} List of matching products
  */
 export const searchProducts = async (query) => {
-  const response = await apiRequest(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
-  return response.data || [];
+  return productsApi.search(query);
 };

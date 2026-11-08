@@ -1,15 +1,16 @@
 import { apiRequest } from './apiUtils';
+import { createResourceApi } from './resourceApiFactory';
 import { API_CONFIG } from '../config';
 
 const API_BASE_URL = API_CONFIG.BASE_URL;
+const imagesApi = createResourceApi({ resourcePath: 'images' });
 
 /**
  * Fetch all images
  * @returns {Promise<Array>} List of images
  */
 export const fetchImagesList = async () => {
-  const response = await apiRequest(`${API_BASE_URL}/images`);
-  return response.data || [];
+  return imagesApi.fetchList();
 };
 
 /**
@@ -18,8 +19,7 @@ export const fetchImagesList = async () => {
  * @returns {Promise<Object>} Image data
  */
 export const fetchImageById = async (id) => {
-  const response = await apiRequest(`${API_BASE_URL}/images/${id}`);
-  return response.data;
+  return imagesApi.fetchById(id);
 };
 
 /**
@@ -28,8 +28,7 @@ export const fetchImageById = async (id) => {
  * @returns {Promise<Array>} List of images in category
  */
 export const fetchImagesByCategory = async (category) => {
-  const response = await apiRequest(`${API_BASE_URL}/images/category/${category}`);
-  return response.data || [];
+  return imagesApi.fetchByCategory(category);
 };
 
 /**
@@ -38,8 +37,7 @@ export const fetchImagesByCategory = async (category) => {
  * @returns {Promise<Array>} List of matching images
  */
 export const searchImages = async (query) => {
-  const response = await apiRequest(`${API_BASE_URL}/images/search?q=${encodeURIComponent(query)}`);
-  return response.data || [];
+  return imagesApi.search(query);
 };
 
 /**

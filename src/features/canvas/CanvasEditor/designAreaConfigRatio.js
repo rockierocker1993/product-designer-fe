@@ -72,12 +72,15 @@ export const DESIGN_AREA_PRESETS = {
 export const calculateDesignArea = (presetType, canvasWidth, canvasHeight) => {
   const preset = DESIGN_AREA_PRESETS[presetType] || DESIGN_AREA_PRESETS[DESIGN_AREA_TYPES.FRONT_CENTER];
   
-  const designWidth = preset.baseWidth;
-  const designHeight = (designWidth / preset.ratio.width) * preset.ratio.height;
-  
+  // Scale design area proportionally to canvas dimensions.
+  // Reference canvas was 1400 × 400 px; baseWidth=150 fitted 10.7 % of width.
+  const heightScale = canvasHeight / 400;
+  const designWidth  = Math.round(preset.baseWidth * heightScale);
+  const designHeight = Math.round((designWidth / preset.ratio.width) * preset.ratio.height);
+
   return {
-    x: (canvasWidth - designWidth) / 2 + preset.offsetX,
-    y: 120,
+    x: (canvasWidth - designWidth) / 2 + Math.round(preset.offsetX * heightScale),
+    y: Math.round(canvasHeight * 0.30),   // 30 % from top (was hardcoded 120 px = 30 % of 400)
     width: designWidth,
     height: designHeight,
     ratio: preset.ratio,

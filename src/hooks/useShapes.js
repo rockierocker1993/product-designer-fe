@@ -1,64 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { fetchShapesList, fetchShapesByCategory, searchShapes } from '../api/shapesApi';
+import { useLoadableData } from './useLoadableData';
 
 /**
  * Custom hook for fetching and managing shapes from API
  */
 export const useShapes = () => {
-  const [shapes, setShapes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const {
+    data: shapes,
+    loading,
+    error,
+    reload,
+  } = useLoadableData(fetchShapesList);
 
-  const loadShapes = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchShapesList();
-      setShapes(data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error loading shapes:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadShapes();
-  }, []);
-
-  return { shapes, loading, error, refetch: loadShapes };
+  return { shapes, loading, error, refetch: reload };
 };
 
 /**
  * Custom hook for fetching shapes by category
  */
 export const useShapesByCategory = (category) => {
-  const [shapes, setShapes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!category) return;
-
-    const loadShapes = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchShapesByCategory(category);
-        setShapes(data);
-      } catch (err) {
-        setError(err.message);
-        console.error(`Error loading shapes for category ${category}:`, err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadShapes();
+  const loadShapesByCategory = useCallback(async () => {
+    if (!category) return [];
+    return fetchShapesByCategory(category);
   }, [category]);
 
-  return { shapes, loading, error };
+  const {
+    data: shapes,
+    loading,
+    error,
+    reload,
+  } = useLoadableData(loadShapesByCategory);
+
+  return { shapes, loading, error, refetch: reload };
 };
 
 /**
@@ -69,8 +43,8 @@ export const useSearchShapes = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const search = async (keyword) => {
-    if (!keyword) {
+  const search = async (query) => {
+    if (!query) {
       setShapes([]);
       return;
     }
@@ -78,11 +52,11 @@ export const useSearchShapes = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await searchShapes(keyword);
+      const data = await searchShapes(query);
       setShapes(data);
     } catch (err) {
       setError(err.message);
-      console.error(`Error searching shapes with keyword "${keyword}":`, err);
+      console.error(`Error searching shapes with query "${query}":`, err);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 /**
  * API Utils - Generic utilities for API calls
  */
+export { toBaseResponse } from './model/baseResponse';
 
 // Loading state management
 let loadingElement = null;
@@ -72,7 +73,7 @@ export const hideLoading = () => {
  */
 export const handleApiError = async (response) => {
   let errorMessage = `HTTP error! status: ${response.status}`;
-  
+
   try {
     const errorData = await response.json();
     if (errorData.message) {
@@ -81,10 +82,10 @@ export const handleApiError = async (response) => {
   } catch (e) {
     // If response body is not JSON, use default message
   }
-  
+
   // Show popup alert
   alert(`Error: ${errorMessage}`);
-  
+
   throw new Error(errorMessage);
 };
 
@@ -101,17 +102,35 @@ export const apiRequest = async (url, options = {}, showLoadingIndicator = true)
   }
 
   try {
+    const isFormDataPayload = options.body instanceof FormData;
+    const defaultHeaders = {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('authToken') || 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwcm9kdWN0LWRlc2lnbmVyLWJlIiwic3ViIjoiaWtoc2FuZmFkbHkiLCJpYXQiOjE3OTQwMjU2ODQsInNjb3BlIjoiIn0.tTlqkFDoQ9srELHf3_hgomvVaomwivkeeraYMDfStWo'}`,
+      ...(isFormDataPayload ? {} : { 'Content-Type': 'application/json' }),
+    };
+
     const defaultOptions = {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers: defaultHeaders,
       mode: 'cors',
       credentials: 'omit',
     };
 
-    const response = await fetch(url, { ...defaultOptions, ...options });
+    const mergedOptions = {
+      ...defaultOptions,
+      ...options,
+      headers: {
+        ...defaultHeaders,
+        ...(options.headers || {}),
+      },
+    };
+
+    // Browser must define multipart boundary for FormData.
+    if (isFormDataPayload && mergedOptions.headers['Content-Type']) {
+      delete mergedOptions.headers['Content-Type'];
+    }
+
+    const response = await fetch(url, mergedOptions);
 
     if (!response.ok) {
       await handleApiError(response);

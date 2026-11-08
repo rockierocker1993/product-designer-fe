@@ -1,34 +1,22 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addImageItem } from "../../../store/components/AddCanvasItemSlice";
 import { fetchImagesList, uploadImage } from "../../../api/imagesApi";
-import '../../../assets/css/sidebar.css';
+import { SidebarPanelShell, SidebarGridState } from "./components";
+import { useLoadableData } from "../../../hooks";
 
 const Images = () => {
   const dispatch = useDispatch();
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {
+    data: images,
+    setData: setImages,
+    loading,
+    error,
+    reload: loadImages,
+  } = useLoadableData(fetchImagesList);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef(null);
-
-  useEffect(() => {
-    loadImages();
-  }, []);
-
-  const loadImages = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchImagesList();
-      setImages(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleImageClick = (imageId) => {
     dispatch(addImageItem(`image-${imageId}`));
@@ -44,7 +32,7 @@ const Images = () => {
     setUploading(true);
     try {
       const uploadedImage = await uploadImage(formData);
-      setImages([uploadedImage, ...images]);
+      setImages((previousImages) => [uploadedImage, ...previousImages]);
     } catch (err) {
       alert('Upload failed: ' + err.message);
     } finally {
@@ -57,75 +45,53 @@ const Images = () => {
     image.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  return (
-    <div className="col column menu-detail">
-    <div className="sidebar-content">
-      <div className="sidebar-header">
-        <h3 className="sidebar-title">Images</h3>
-        <p className="sidebar-subtitle">Click to add image</p>
-      </div>
+  const footerText = !loading && !error && images.length > 0
+    ? `Showing ${filteredImages.length} of ${images.length} images`
+    : null;
 
-      {/* Upload Button */}
-      <div className="sidebar-actions">
-        <button 
-          className="upload-btn"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          {uploading ? 'Uploading...' : 'Upload Image'}
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleUpload}
-          style={{ display: 'none' }}
-        />
-      </div>
-
-      {/* Search Bar */}
-      <div className="sidebar-search">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search images..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
+  const uploadAction = (
+    <>
+      <button
+        className="upload-btn"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={uploading}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-      </div>
+        {uploading ? 'Uploading...' : 'Upload Image'}
+      </button>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleUpload}
+        style={{ display: 'none' }}
+      />
+    </>
+  );
 
-      {/* Images Grid */}
+  return (
+    <SidebarPanelShell
+      title="Images"
+      subtitle="Click to add image"
+      actions={uploadAction}
+      searchPlaceholder="Search images..."
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+      footer={footerText}
+    >
       <div className="items-grid images-grid">
-        {loading && (
-          <div className="grid-message">
-            <div className="spinner"></div>
-            <p>Loading images...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="grid-message error">
-            <p>Error: {error}</p>
-            <button onClick={loadImages} className="retry-btn">
-              Retry
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && filteredImages.length === 0 && (
-          <div className="grid-message">
-            <p>No images found</p>
-          </div>
-        )}
+        <SidebarGridState
+          loading={loading}
+          loadingText="Loading images..."
+          error={error}
+          onRetry={loadImages}
+          empty={!loading && !error && filteredImages.length === 0}
+          emptyText="No images found"
+        />
 
         {!loading && !error && filteredImages.map((image) => (
           <div
@@ -150,15 +116,7 @@ const Images = () => {
           </div>
         ))}
       </div>
-
-      {/* Footer */}
-      {!loading && !error && images.length > 0 && (
-        <div className="sidebar-footer">
-          Showing {filteredImages.length} of {images.length} images
-        </div>
-      )}
-    </div>
-    </div>
+    </SidebarPanelShell>
   );
 };
 

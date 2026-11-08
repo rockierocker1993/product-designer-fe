@@ -1,32 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addShapesItem } from "../../../store/components/AddCanvasItemSlice";
 import { fetchShapesList } from "../../../api/shapesApi";
-import '../../../assets/css/sidebar.css';
+import { SidebarPanelShell, SidebarGridState } from "./components";
+import { useLoadableData } from "../../../hooks";
 
 const Shape = () => {
   const dispatch = useDispatch();
-  const [shapes, setShapes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    loadShapes();
-  }, []);
-
-  const loadShapes = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchShapesList();
-      setShapes(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: shapes,
+    loading,
+    error,
+    reload: loadShapes,
+  } = useLoadableData(fetchShapesList);
 
   const handleShapeClick = (shapeId) => {
     dispatch(addShapesItem(`api-${shapeId}`));
@@ -48,52 +35,28 @@ const Shape = () => {
     shape.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const footerText = !loading && !error && shapes.length > 0
+    ? `Showing ${filteredShapes.length} of ${shapes.length} shapes`
+    : null;
+
   return (
-    <div className="col column menu-detail">
-    <div className="sidebar-content">
-      <div className="sidebar-header">
-        <h3 className="sidebar-title">Shapes</h3>
-        <p className="sidebar-subtitle">Click to add shape</p>
-      </div>
-
-      {/* Search Bar */}
-      <div className="sidebar-search">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search shapes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-      </div>
-
-      {/* Shapes Grid */}
+    <SidebarPanelShell
+      title="Shapes"
+      subtitle="Click to add shape"
+      searchPlaceholder="Search shapes..."
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+      footer={footerText}
+    >
       <div className="items-grid shapes-grid">
-        {loading && (
-          <div className="grid-message">
-            <div className="spinner"></div>
-            <p>Loading shapes...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="grid-message error">
-            <p>Error: {error}</p>
-            <button onClick={loadShapes} className="retry-btn">
-              Retry
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && filteredShapes.length === 0 && (
-          <div className="grid-message">
-            <p>No shapes found</p>
-          </div>
-        )}
+        <SidebarGridState
+          loading={loading}
+          loadingText="Loading shapes..."
+          error={error}
+          onRetry={loadShapes}
+          empty={!loading && !error && filteredShapes.length === 0}
+          emptyText="No shapes found"
+        />
 
         {!loading && !error && filteredShapes.map((shape) => (
           <div
@@ -117,15 +80,7 @@ const Shape = () => {
           </div>
         ))}
       </div>
-
-      {/* Footer */}
-      {!loading && !error && shapes.length > 0 && (
-        <div className="sidebar-footer">
-          Showing {filteredShapes.length} of {shapes.length} shapes
-        </div>
-      )}
-    </div>
-    </div>
+    </SidebarPanelShell>
   );
 };
 

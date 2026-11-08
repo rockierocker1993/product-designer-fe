@@ -1,32 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTemplateItem } from "../../../store/components/AddCanvasItemSlice";
 import { fetchTemplatesList } from "../../../api/templatesApi";
-import '../../../assets/css/sidebar.css';
+import { SidebarPanelShell, SidebarGridState } from "./components";
+import { useLoadableData } from "../../../hooks";
 
 const Templates = () => {
   const dispatch = useDispatch();
-  const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    loadTemplates();
-  }, []);
-
-  const loadTemplates = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchTemplatesList();
-      setTemplates(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: templates,
+    loading,
+    error,
+    reload: loadTemplates,
+  } = useLoadableData(fetchTemplatesList);
 
   const handleTemplateClick = (templateId) => {
     dispatch(addTemplateItem(`template-${templateId}`));
@@ -37,52 +24,28 @@ const Templates = () => {
     template.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const footerText = !loading && !error && templates.length > 0
+    ? `Showing ${filteredTemplates.length} of ${templates.length} templates`
+    : null;
+
   return (
-    <div className="col column menu-detail">
-    <div className="sidebar-content">
-      <div className="sidebar-header">
-        <h3 className="sidebar-title">Templates</h3>
-        <p className="sidebar-subtitle">Choose a template to start</p>
-      </div>
-
-      {/* Search Bar */}
-      <div className="sidebar-search">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search templates..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-      </div>
-
-      {/* Templates Grid */}
+    <SidebarPanelShell
+      title="Templates"
+      subtitle="Choose a template to start"
+      searchPlaceholder="Search templates..."
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+      footer={footerText}
+    >
       <div className="items-grid templates-grid">
-        {loading && (
-          <div className="grid-message">
-            <div className="spinner"></div>
-            <p>Loading templates...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="grid-message error">
-            <p>Error: {error}</p>
-            <button onClick={loadTemplates} className="retry-btn">
-              Retry
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && filteredTemplates.length === 0 && (
-          <div className="grid-message">
-            <p>No templates found</p>
-          </div>
-        )}
+        <SidebarGridState
+          loading={loading}
+          loadingText="Loading templates..."
+          error={error}
+          onRetry={loadTemplates}
+          empty={!loading && !error && filteredTemplates.length === 0}
+          emptyText="No templates found"
+        />
 
         {!loading && !error && filteredTemplates.map((template) => (
           <div
@@ -116,15 +79,7 @@ const Templates = () => {
           </div>
         ))}
       </div>
-
-      {/* Footer */}
-      {!loading && !error && templates.length > 0 && (
-        <div className="sidebar-footer">
-          Showing {filteredTemplates.length} of {templates.length} templates
-        </div>
-      )}
-    </div>
-    </div>
+    </SidebarPanelShell>
   );
 };
 

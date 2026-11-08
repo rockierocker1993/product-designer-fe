@@ -1,34 +1,28 @@
-import React, { useState } from "react";
-import '../../../assets/css/sidebar.css'
-import Product from "./Product";
-import Images from "./Images";
-import Text from "./Text";
-import Templates from "./Templates";
-import Cliparts from "./Cliparts";
-import Shape from "./Shape";
-import { 
-    ShirtIcon, 
-    ImageIcon, 
-    TypeIcon, 
-    LayoutTemplateIcon, 
-    SparklesIcon, 
-    ShapesIcon,
-    ChevronLeft
-} from 'lucide-react';
+import React, { lazy, Suspense, useState } from "react";
+import '../../../assets/css/sidebar.css';
+import { ChevronLeft, Menu } from 'lucide-react';
+import { primaryMenuItems, secondaryMenuItems } from './sidebarConfig';
+
+const Product = lazy(() => import('./Product'));
+const Images = lazy(() => import('./Images'));
+const Text = lazy(() => import('./Text'));
+const Templates = lazy(() => import('./Templates'));
+const Cliparts = lazy(() => import('./Cliparts'));
+const Shape = lazy(() => import('./Shape'));
+
+const panelByMenu = {
+    product: Product,
+    images: Images,
+    text: Text,
+    templates: Templates,
+    cliparts: Cliparts,
+    shapes: Shape,
+};
 
 const Sidebar = () => {
     const [activeMenu, setActiveMenu] = useState(null); // Changed to null for no default
     const [hoveredMenu, setHoveredMenu] = useState(null);
     const [isPanelPinned, setIsPanelPinned] = useState(false);
-
-    const menuItems = [
-        { id: "product", label: "Product", icon: ShirtIcon },
-        { id: "images", label: "Images", icon: ImageIcon },
-        { id: "text", label: "Text", icon: TypeIcon },
-        { id: "templates", label: "Templates", icon: LayoutTemplateIcon },
-        { id: "cliparts", label: "Cliparts", icon: SparklesIcon },
-        { id: "shapes", label: "Shapes", icon: ShapesIcon },
-    ];
 
     const handleMenuClick = (menuId) => {
         if (activeMenu === menuId) {
@@ -63,23 +57,20 @@ const Sidebar = () => {
     const displayedMenu = isPanelPinned ? activeMenu : hoveredMenu;
     const showPanel = displayedMenu !== null;
 
-    const renderContent = () => {
-        switch(displayedMenu) {
-            case "product": return <Product />;
-            case "images": return <Images />;
-            case "text": return <Text />;
-            case "templates": return <Templates />;
-            case "cliparts": return <Cliparts />;
-            case "shapes": return <Shape />;
-            default: return null;
-        }
-    };
+    const ActivePanel = displayedMenu ? panelByMenu[displayedMenu] : null;
 
     return (
         <>
-            <div className="col column menu">
-                <ul>
-                    {menuItems.map((item) => {
+            <div className="menu">
+                <div className="menu-brand-block">
+                    <button type="button" className="menu-brand-logo" aria-label="Brand">K</button>
+                    <button type="button" className="menu-hamburger" aria-label="Menu">
+                        <Menu size={16} />
+                    </button>
+                </div>
+
+                <ul className="menu-primary-list">
+                    {primaryMenuItems.map((item) => {
                         const Icon = item.icon;
                         return (
                             <li key={item.id}>
@@ -96,6 +87,23 @@ const Sidebar = () => {
                         );
                     })}
                 </ul>
+
+                <div className="menu-secondary-list">
+                    {secondaryMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                            <button
+                                key={item.id}
+                                type="button"
+                                className="item-menu item-menu-secondary center-text"
+                                aria-label={item.ariaLabel}
+                            >
+                                <Icon size={20} strokeWidth={1.8} />
+                                <span>{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
             
             {showPanel && (
@@ -106,7 +114,7 @@ const Sidebar = () => {
                 >
                     <div className="sidebar-panel-header">
                         <h3 className="sidebar-panel-title">
-                            {menuItems.find(item => item.id === displayedMenu)?.label}
+                            {primaryMenuItems.find(item => item.id === displayedMenu)?.label}
                         </h3>
                         {isPanelPinned && (
                             <button 
@@ -119,7 +127,16 @@ const Sidebar = () => {
                         )}
                     </div>
                     <div className="sidebar-panel-content">
-                        {renderContent()}
+                        <Suspense
+                            fallback={
+                                <div className="grid-message">
+                                    <div className="spinner"></div>
+                                    <p>Loading panel...</p>
+                                </div>
+                            }
+                        >
+                            {ActivePanel ? <ActivePanel /> : null}
+                        </Suspense>
                     </div>
                 </div>
             )}

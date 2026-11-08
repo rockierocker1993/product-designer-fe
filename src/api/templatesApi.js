@@ -1,15 +1,13 @@
-import { apiRequest } from './apiUtils';
-import { API_CONFIG } from '../config';
+import { createResourceApi } from './resourceApiFactory';
 
-const API_BASE_URL = API_CONFIG.BASE_URL;
+const templatesApi = createResourceApi({ resourcePath: 'templates' });
 
 /**
  * Fetch all templates
  * @returns {Promise<Array>} List of templates
  */
 export const fetchTemplatesList = async () => {
-  const response = await apiRequest(`${API_BASE_URL}/templates`);
-  return response.data || [];
+  return templatesApi.fetchList();
 };
 
 /**
@@ -18,8 +16,7 @@ export const fetchTemplatesList = async () => {
  * @returns {Promise<Object>} Template data
  */
 export const fetchTemplateById = async (id) => {
-  const response = await apiRequest(`${API_BASE_URL}/templates/${id}`);
-  return response.data;
+  return templatesApi.fetchById(id);
 };
 
 /**
@@ -28,8 +25,7 @@ export const fetchTemplateById = async (id) => {
  * @returns {Promise<Array>} List of templates in category
  */
 export const fetchTemplatesByCategory = async (category) => {
-  const response = await apiRequest(`${API_BASE_URL}/templates/category/${category}`);
-  return response.data || [];
+  return templatesApi.fetchByCategory(category);
 };
 
 /**
@@ -38,6 +34,5 @@ export const fetchTemplatesByCategory = async (category) => {
  * @returns {Promise<Array>} List of matching templates
  */
 export const searchTemplates = async (query) => {
-  const response = await apiRequest(`${API_BASE_URL}/templates/search?q=${encodeURIComponent(query)}`);
-  return response.data || [];
+  return templatesApi.search(query);
 };

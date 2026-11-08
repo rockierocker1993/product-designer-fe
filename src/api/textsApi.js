@@ -1,15 +1,16 @@
 import { apiRequest } from './apiUtils';
+import { createResourceApi } from './resourceApiFactory';
 import { API_CONFIG } from '../config';
 
 const API_BASE_URL = API_CONFIG.BASE_URL;
+const textStylesApi = createResourceApi({ resourcePath: 'text-styles' });
 
 /**
  * Fetch all text styles
  * @returns {Promise<Array>} List of text styles
  */
 export const fetchTextStylesList = async () => {
-  const response = await apiRequest(`${API_BASE_URL}/text-styles`);
-  return response.data || [];
+  return textStylesApi.fetchList();
 };
 
 /**
@@ -18,8 +19,7 @@ export const fetchTextStylesList = async () => {
  * @returns {Promise<Object>} Text style data
  */
 export const fetchTextStyleById = async (id) => {
-  const response = await apiRequest(`${API_BASE_URL}/text-styles/${id}`);
-  return response.data;
+  return textStylesApi.fetchById(id);
 };
 
 /**
@@ -37,6 +37,5 @@ export const fetchFontsList = async () => {
  * @returns {Promise<Array>} List of matching text styles
  */
 export const searchTextStyles = async (query) => {
-  const response = await apiRequest(`${API_BASE_URL}/text-styles/search?q=${encodeURIComponent(query)}`);
-  return response.data || [];
+  return textStylesApi.search(query);
 };

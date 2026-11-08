@@ -1,17 +1,13 @@
-import { apiRequest } from './apiUtils';
+import { createResourceApi } from './resourceApiFactory';
 
-// API base URL - sesuaikan dengan backend Anda
-import { API_CONFIG } from '../config';
-
-const API_BASE_URL = API_CONFIG.BASE_URL;
+const shapesApi = createResourceApi({ resourcePath: 'shapes' });
 
 /**
  * Fetch list of available shapes from API
  * @returns {Promise<Array>} Array of shape objects
  */
 export const fetchShapesList = async () => {
-  const response = await apiRequest(`${API_BASE_URL}/shapes`);
-  return response.data || [];
+  return shapesApi.fetchList();
 };
 
 /**
@@ -20,8 +16,7 @@ export const fetchShapesList = async () => {
  * @returns {Promise<Object>} Shape object with SVG data
  */
 export const fetchShapeById = async (shapeId) => {
-  const response = await apiRequest(`${API_BASE_URL}/shapes/${shapeId}`);
-  return response.data || null;
+  return shapesApi.fetchById(shapeId);
 };
 
 /**
@@ -30,16 +25,14 @@ export const fetchShapeById = async (shapeId) => {
  * @returns {Promise<Array>} Array of shape objects
  */
 export const fetchShapesByCategory = async (category) => {
-  const response = await apiRequest(`${API_BASE_URL}/shapes/category/${category}`);
-  return response.data || [];
+  return shapesApi.fetchByCategory(category);
 };
 
 /**
- * Search shapes by keyword
- * @param {string} keyword - Search keyword
+ * Search shapes by query
+ * @param {string} query - Search query
  * @returns {Promise<Array>} Array of matching shape objects
  */
-export const searchShapes = async (keyword) => {
-  const response = await apiRequest(`${API_BASE_URL}/shapes/search?q=${encodeURIComponent(keyword)}`);
-  return response.data || [];
+export const searchShapes = async (query) => {
+  return shapesApi.search(query);
 };

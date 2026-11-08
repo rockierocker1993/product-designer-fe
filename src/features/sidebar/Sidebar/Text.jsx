@@ -1,37 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTextItem } from "../../../store/components/AddCanvasItemSlice";
 import { fetchTextStylesList, fetchFontsList } from "../../../api/textsApi";
-import '../../../assets/css/sidebar.css';
+import { SidebarPanelShell, SidebarGridState } from "./components";
+import { useLoadableData } from "../../../hooks";
 
 const Text = () => {
   const dispatch = useDispatch();
-  const [textStyles, setTextStyles] = useState([]);
-  const [fonts, setFonts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const {
+    data: textStyles,
+    loading: loadingTextStyles,
+    error: textStylesError,
+    reload: loadTextStyles,
+  } = useLoadableData(fetchTextStylesList);
+  const {
+    data: fonts,
+    loading: loadingFonts,
+    error: fontsError,
+    reload: loadFonts,
+  } = useLoadableData(fetchFontsList);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState('styles'); // 'styles' or 'fonts'
 
-  useEffect(() => {
-    loadTextData();
-  }, []);
+  const loading = loadingTextStyles || loadingFonts;
+  const error = textStylesError || fontsError;
 
   const loadTextData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [stylesData, fontsData] = await Promise.all([
-        fetchTextStylesList(),
-        fetchFontsList()
-      ]);
-      setTextStyles(stylesData);
-      setFonts(fontsData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await Promise.all([loadTextStyles(), loadFonts()]);
   };
 
   const handleAddText = () => {
@@ -54,74 +49,61 @@ const Text = () => {
     font.family?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const footerText = !loading && !error
+    ? activeTab === 'styles'
+      ? `${filteredStyles.length} of ${textStyles.length} styles`
+      : `${filteredFonts.length} of ${fonts.length} fonts`
+    : null;
+
+  const textAction = (
+    <button className="add-text-btn" onClick={handleAddText}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polyline points="4 7 4 4 20 4 20 7"/>
+        <line x1="9" y1="20" x2="15" y2="20"/>
+        <line x1="12" y1="4" x2="12" y2="20"/>
+      </svg>
+      Add Text
+    </button>
+  );
+
+  const textFilters = (
+    <>
+      <button
+        className={`tab-btn ${activeTab === 'styles' ? 'active' : ''}`}
+        onClick={() => setActiveTab('styles')}
+      >
+        Text Styles
+      </button>
+      <button
+        className={`tab-btn ${activeTab === 'fonts' ? 'active' : ''}`}
+        onClick={() => setActiveTab('fonts')}
+      >
+        Fonts
+      </button>
+    </>
+  );
+
   return (
-    <div className="col column menu-detail">
-    <div className="sidebar-content">
-      <div className="sidebar-header">
-        <h3 className="sidebar-title">Text</h3>
-        <p className="sidebar-subtitle">Add text to your design</p>
-      </div>
-
-      {/* Add Text Button */}
-      <div className="sidebar-actions">
-        <button className="add-text-btn" onClick={handleAddText}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <polyline points="4 7 4 4 20 4 20 7"/>
-            <line x1="9" y1="20" x2="15" y2="20"/>
-            <line x1="12" y1="4" x2="12" y2="20"/>
-          </svg>
-          Add Text
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="sidebar-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'styles' ? 'active' : ''}`}
-          onClick={() => setActiveTab('styles')}
-        >
-          Text Styles
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'fonts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('fonts')}
-        >
-          Fonts
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      <div className="sidebar-search">
-        <input
-          type="text"
-          className="search-input"
-          placeholder={`Search ${activeTab}...`}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-      </div>
-
-      {/* Content */}
+    <SidebarPanelShell
+      title="Text"
+      subtitle="Add text to your design"
+      actions={textAction}
+      filters={textFilters}
+      filtersClassName="sidebar-tabs"
+      searchPlaceholder={`Search ${activeTab}...`}
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+      footer={footerText}
+    >
       <div className="text-content">
-        {loading && (
-          <div className="grid-message">
-            <div className="spinner"></div>
-            <p>Loading {activeTab}...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="grid-message error">
-            <p>Error: {error}</p>
-            <button onClick={loadTextData} className="retry-btn">
-              Retry
-            </button>
-          </div>
-        )}
+        <SidebarGridState
+          loading={loading}
+          loadingText={`Loading ${activeTab}...`}
+          error={error}
+          onRetry={loadTextData}
+          empty={false}
+          emptyText=""
+        />
 
         {/* Text Styles */}
         {!loading && !error && activeTab === 'styles' && (
@@ -184,18 +166,7 @@ const Text = () => {
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      {!loading && !error && (
-        <div className="sidebar-footer">
-          {activeTab === 'styles' 
-            ? `${filteredStyles.length} of ${textStyles.length} styles`
-            : `${filteredFonts.length} of ${fonts.length} fonts`
-          }
-        </div>
-      )}
-    </div>
-    </div>
+    </SidebarPanelShell>
   );
 };
 

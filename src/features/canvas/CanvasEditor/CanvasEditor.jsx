@@ -12,156 +12,180 @@ import {
   lockUnlockSelectedObject,
   movePositionSelectedObject,
   handleObjectSelection,
-  getColorFilter
 } from "./canvasUtils.js";
 import { customTransformControl, setupControlsVisibility } from "./customControls.js";
 import { handleDragOver, handleDragLeave, handleDrop } from "./dragDropHandlers.js";
 import ZoomControl from "./ZoomControl.jsx";
-// import { 
-//   initializeDesignAreaRatio
-// } from "./designAreaConfigRatio.js";
-import {
-  initializeFullFillArea
-} from "./designAreaConfigFullFill.js";
 import tshirtImage from "../../../assets/images/tshirtfront.png";
 import { initializeDesignAreaRatio } from "./designAreaConfigRatio.js";
+import { CanvasStage, EditorTopbar, EditorPropertiesPanel } from "./components";
+import { DEFAULT_PROJECT_NAME } from "./config/editorUiConfig";
 
 const CanvasEditor = () => {
-  const designType = "ratio";
+  const dispatch = useDispatch();
 
-
-  const dispatch = useDispatch()
-  //transform redux state
+  // transform redux state
   const rotate = useSelector((state) => state.tooltipTransforms.rotate);
-  const skewX = useSelector((state) => state.tooltipTransforms.skewX);
-  const skewY = useSelector((state) => state.tooltipTransforms.skewY);
-  const flipX = useSelector((state) => state.tooltipTransforms.flipX);
-  const flipY = useSelector((state) => state.tooltipTransforms.flipY);
-  //end of transform redux state
+  const skewX  = useSelector((state) => state.tooltipTransforms.skewX);
+  const skewY  = useSelector((state) => state.tooltipTransforms.skewY);
+  const flipX  = useSelector((state) => state.tooltipTransforms.flipX);
+  const flipY  = useSelector((state) => state.tooltipTransforms.flipY);
 
-  //position redux state
+  // position redux state
   const isLockObject = useSelector((state) => state.tooltipPosition.isLockObject);
-  //end of position redux state
 
-  //const canvasRef = useRef(null)
   const designAreaObjsRef = useRef(null);
-  const [canvas, setCanvas] = useState(null)
-  const [tshirtColor, setTshirtColor] = useState('#ffffff') // Default white
+  const isPanningRef      = useRef(false);
+  const panStartRef       = useRef(null);
+  const [canvas, setCanvas]         = useState(null);
+  const [tshirtColor, setTshirtColor] = useState('#ffffff');
 
   useEffect(() => {
-    // Canvas size calculated only on initial load (no resize listener)
-    const canvasContainer = document.getElementById('canvasContainer');
-    if (!canvasContainer) return;
+    const canvasArea = document.getElementById('canvasArea');
+    if (!canvasArea) return;
 
-    const canvasWidth = 1400;
-    const canvasHeight = 400;
+    // Canvas fills the full canvas-area container
+    const canvasWidth  = canvasArea.clientWidth;
+    const canvasHeight = canvasArea.clientHeight;
 
     const initCanvas = new fabric.Canvas('canvas', {
       width: canvasWidth,
       height: canvasHeight,
-      backgroundColor: null // Keep canvas transparent
+      backgroundColor: null,
     });
 
-    // for design area full fill area calculation
-    if (designType === "full-fill") {
-      fabric.Image.fromURL(tshirtImage, (img) => {
-        img.set({
-          left: canvasWidth / 2,
-          top: canvasHeight / 2,
-          originX: 'center',
-          originY: 'center',
-          selectable: false,
-          evented: false,
-          id: 'tshirt-image'
-        });
-
-        // Scale image to fit canvas
-        const scale = Math.min(
-          (canvasWidth * 0.8) / img.width,
-          (canvasHeight * 0.8) / img.height
-        );
-        img.scale(scale);
-
-        initCanvas.add(img);
-        initCanvas.sendToBack(img);
-
-        // Initialize full fill area using t-shirt image
-        const designAreaObjs = initializeFullFillArea(initCanvas, img);
-        designAreaObjsRef.current = designAreaObjs;
-
-        initCanvas.renderAll();
+    // ── T-shirt background: non-interactive Fabric image, centred ──────────
+    fabric.Image.fromURL(tshirtImage, (img) => {
+      const scale = Math.min(
+        (canvasHeight * 0.85) / img.height,
+        (canvasWidth  * 0.40) / img.width,
+      );
+      img.set({
+        left:       canvasWidth  / 2,
+        top:        canvasHeight / 2,
+        originX:    'center',
+        originY:    'center',
+        scaleX:     scale,
+        scaleY:     scale,
+        selectable:     false,
+        evented:        false,
+        lockMovementX:  true,
+        lockMovementY:  true,
+        lockScalingX:   true,
+        lockScalingY:   true,
+        lockRotation:   true,
+        hasControls:    false,
+        hasBorders:     false,
+        excludeFromExport: true,
+        id: 'tshirt-background',
       });
-    }
-    // for design area ratio initialization
-    else {
+      initCanvas.add(img);
+      initCanvas.sendToBack(img);
+
+      // Design area is calculated after canvas & t-shirt dimensions are known
       const designAreaObjs = initializeDesignAreaRatio(initCanvas);
+      designAreaObjsRef.current = designAreaObjs;
+
       initCanvas.renderAll();
-    }
+    });
 
+    // ── Object event handlers ──────────────────────────────────────────────
     const handleObjectSelected = () => {
-      const selected = initCanvas.getActiveObject();
-      onObjectSelected(selected);
+      onObjectSelected(initCanvas.getActiveObject());
     };
-
     const handleObjectRotating = (e) => {
-      const obj = e.target;
-      if (obj) {
-        const currentRotate = parseInt(obj.angle);
-        dispatch(setRotate(currentRotate));
-      }
+      if (e.target) dispatch(setRotate(parseInt(e.target.angle)));
     };
-
     const handleObjectScaling = (e) => {
-      const obj = e.target;
-      if (obj) {
-        console.log('Object scaling:', obj.scaleX, obj.scaleY);
-      }
+      if (e.target) console.log('scaling:', e.target.scaleX, e.target.scaleY);
     };
-
     const handleObjectModified = (e) => {
-      const obj = e.target;
-      if (obj) {
-        const currentRotate = parseInt(obj.angle);
-        const currentSkewX = obj.skewX;
-        const currentSkewY = obj.skewY;
-        const currentFlipX = obj.flipX;
-        const currentFlipY = obj.flipY;
-
-        dispatch(setRotate(currentRotate));
-        dispatch(setSkewX(currentSkewX));
-        dispatch(setSkewY(currentSkewY));
-        dispatch(setFlipX(currentFlipX));
-        dispatch(setFlipY(currentFlipY));
-      }
+      if (!e.target) return;
+      dispatch(setRotate(parseInt(e.target.angle)));
+      dispatch(setSkewX(e.target.skewX));
+      dispatch(setSkewY(e.target.skewY));
+      dispatch(setFlipX(e.target.flipX));
+      dispatch(setFlipY(e.target.flipY));
     };
 
-    initCanvas.on('selection:created', handleObjectSelected);
-    initCanvas.on('selection:updated', handleObjectSelected);
-    initCanvas.on('object:selected', handleObjectSelected);
-    initCanvas.on('object:rotating', handleObjectRotating);
-    initCanvas.on('object:scaling', handleObjectScaling);
-    initCanvas.on('object:modified', handleObjectModified);
+    initCanvas.on('selection:created',  handleObjectSelected);
+    initCanvas.on('selection:updated',  handleObjectSelected);
+    initCanvas.on('object:selected',    handleObjectSelected);
+    initCanvas.on('object:rotating',    handleObjectRotating);
+    initCanvas.on('object:scaling',     handleObjectScaling);
+    initCanvas.on('object:modified',    handleObjectModified);
+
+    // ── Grab cursor + viewport pan on empty canvas ─────────────────────────
+    initCanvas.defaultCursor = 'grab';
+
+    const resetPan = () => {
+      if (isPanningRef.current) {
+        initCanvas.selection    = true;
+        initCanvas.defaultCursor = 'grab';
+      }
+      isPanningRef.current = false;
+      panStartRef.current  = null;
+    };
+
+    const handleCanvasPanStart = (opt) => {
+      if (opt.target) return;              // clicked on an object — don't pan
+      isPanningRef.current = true;
+      panStartRef.current  = { x: opt.e.clientX, y: opt.e.clientY };
+      initCanvas.selection    = false;     // stop Fabric drawing a selection rect
+      initCanvas.defaultCursor = 'grabbing';
+      initCanvas.setCursor('grabbing');
+    };
+
+    const handleCanvasPanMove = (opt) => {
+      if (!isPanningRef.current || !panStartRef.current) return;
+      // If the mouse button was released outside the canvas, Fabric's mouse:up
+      // never fires — detect it here and stop panning immediately.
+      if (opt.e.buttons === 0) {
+        resetPan();
+        return;
+      }
+      const dx = opt.e.clientX - panStartRef.current.x;
+      const dy = opt.e.clientY - panStartRef.current.y;
+      // relativePan → absolutePan → setViewportTransform, which calls
+      // setCoords() on every object so hit-detection coords stay in sync
+      // with the new visual position. Direct vpt mutation skips setCoords
+      // and is the root cause of the "can't click shape after pan" bug.
+      initCanvas.relativePan(new fabric.Point(dx, dy));
+      panStartRef.current = { x: opt.e.clientX, y: opt.e.clientY };
+    };
+
+    const handleCanvasPanEnd = () => resetPan();
+
+    // Catch mouse-up outside the canvas so pan state never gets stuck
+    const handleWindowMouseUp = () => resetPan();
+    window.addEventListener('mouseup', handleWindowMouseUp);
+
+    initCanvas.on('mouse:down', handleCanvasPanStart);
+    initCanvas.on('mouse:move', handleCanvasPanMove);
+    initCanvas.on('mouse:up',   handleCanvasPanEnd);
 
     customTransformControl();
     setupControlsVisibility();
     fabric.Object.prototype.set({
       transparentCorners: false,
-      cornerColor: 'transparent',
-      borderColor: 'transparent',
+      cornerColor:  'transparent',
+      borderColor:  'transparent',
     });
 
     setCanvas(initCanvas);
 
     return () => {
-      if (designAreaObjsRef.current && designAreaObjsRef.current.cleanup) {
-        designAreaObjsRef.current.cleanup();
-      }
-      initCanvas.off('selection:created', handleObjectSelected);
-      initCanvas.off('selection:updated', handleObjectSelected);
-      initCanvas.off('object:selected', handleObjectSelected);
-      initCanvas.off('object:rotating', handleObjectRotating);
-      initCanvas.off('object:scaling', handleObjectScaling);
-      initCanvas.off('object:modified', handleObjectModified);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+      if (designAreaObjsRef.current?.cleanup) designAreaObjsRef.current.cleanup();
+      initCanvas.off('selection:created',  handleObjectSelected);
+      initCanvas.off('selection:updated',  handleObjectSelected);
+      initCanvas.off('object:selected',    handleObjectSelected);
+      initCanvas.off('object:rotating',    handleObjectRotating);
+      initCanvas.off('object:scaling',     handleObjectScaling);
+      initCanvas.off('object:modified',    handleObjectModified);
+      initCanvas.off('mouse:down', handleCanvasPanStart);
+      initCanvas.off('mouse:move', handleCanvasPanMove);
+      initCanvas.off('mouse:up',   handleCanvasPanEnd);
       initCanvas.off('after:render');
       initCanvas.dispose();
     };
@@ -170,104 +194,66 @@ const CanvasEditor = () => {
   const onObjectSelected = (activeObject) => {
     if (activeObject) {
       handleObjectSelection(activeObject, dispatch, {
-        setRotate,
-        setSkewY,
-        setSkewX,
-        setFlipY,
-        setFlipX,
-        lockObject,
-        unlockObject
+        setRotate, setSkewY, setSkewX, setFlipY, setFlipX, lockObject, unlockObject,
       });
     }
   };
 
-  //callback function list
   const onTransform = () => {
     transformSelectedObject(canvas, { rotate, skewX, skewY, flipX, flipY });
-  }
+  };
 
   const onPosition = (positionCode) => {
-    // Use appropriate area based on design type
-    const area = designType === "full-fill" ? canvas?.fullFillArea : canvas?.designArea;
-    if (!area) return;
-    movePositionSelectedObject(canvas, area, positionCode);
-  }
-  //end of callback function list
+    if (!canvas?.designArea) return;
+    movePositionSelectedObject(canvas, canvas.designArea, positionCode);
+  };
 
-  //redux list action handlers
   const canvasItem = useSelector((state) => state.addCanvasItem.canvasItem);
   useEffect(() => {
-    if (!canvas || !canvasItem) return;
-    
-    // Use appropriate area based on design type
-    const area = designType === "full-fill" ? canvas.fullFillArea : canvas.designArea;
-    if (!area) return;
-
+    if (!canvas || !canvasItem || !canvas.designArea) return;
+    const area = canvas.designArea;
     createShape(canvas, canvasItem, {
-      // Position shapes in center of design area
-      left: area.x + (area.width / 2),
-      top: area.y + (area.height / 2),
+      left:    area.x + area.width  / 2,
+      top:     area.y + area.height / 2,
       originX: 'center',
-      originY: 'center'
+      originY: 'center',
     });
     dispatch(breakStateAddShapesItem());
   }, [canvasItem, canvas]);
 
   useEffect(() => {
-    if (canvas) {
-      lockUnlockSelectedObject(canvas, isLockObject);
-    }
+    if (canvas) lockUnlockSelectedObject(canvas, isLockObject);
   }, [isLockObject, canvas]);
 
-  // Handle zoom level changes
-  return <div className="col column bg-light canvas-editor" id="canvasEditor">
-    <ToolboxTop
-      onTransform={onTransform}
-      onPosition={onPosition}
-    ></ToolboxTop>
-    <div
-      className="canvas-container"
-      id="canvasContainer"
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={(e) => handleDrop(e, canvas)}
-    >
+  return (
+    <div className="canvas-editor" id="canvasEditor">
+      <div className="canvas-editor-shell">
+        <section className="editor-main">
+          <EditorTopbar projectName={DEFAULT_PROJECT_NAME} />
 
-      <div className="canvas-wrapper" style={{ display: 'inline-block', position: 'relative' }}>
-        {designType === "ratio" && (
-          <div className="tshirt-layer">
-            <img
-              src={tshirtImage}
-              alt="T-shirt"
-              className="tshirt-background"
-            />
-            {tshirtColor !== '#ffffff' && (
-              <div
-                className="tshirt-color-overlay"
-                style={{
-                  backgroundColor: tshirtColor,
-                  '--mask-image': `url(${tshirtImage})`
-                }}
-              />
-            )}
+          <div className="editor-tools-row">
+            <ToolboxTop onTransform={onTransform} onPosition={onPosition} />
           </div>
-        )}
-        <canvas id="canvas"></canvas>
-      </div>
-      {/* Zoom Control Component */}
-      {canvas && <ZoomControl canvas={canvas} />}
 
-      {/* Color picker for testing - nanti bisa dipindah ke UI/Settings */}
-      <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1000, background: 'white', padding: '10px', borderRadius: '5px' }}>
-        <label style={{ display: 'block', marginBottom: '5px', fontSize: '12px' }}>T-Shirt Color:</label>
-        <input
-          type="color"
-          value={tshirtColor}
-          onChange={(e) => setTshirtColor(e.target.value)}
+          <CanvasStage
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={(event) => handleDrop(event, canvas)}
+          />
+
+          <div className="editor-bottom-dock">
+            {canvas && <ZoomControl canvas={canvas} />}
+          </div>
+        </section>
+
+        <EditorPropertiesPanel
+          canvas={canvas}
+          tshirtColor={tshirtColor}
+          onTshirtColorChange={setTshirtColor}
         />
       </div>
     </div>
-  </div>
+  );
 };
 
 export default CanvasEditor;

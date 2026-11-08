@@ -53,14 +53,15 @@ The application will be available at `http://localhost:5173`
 
 ```
 src/
-├── api/                    # API layer - handles all backend communications
-│   ├── apiUtils.js        # Generic API utilities (request wrapper, loading, error handling)
-│   ├── shapesApi.js       # Shapes API endpoints
-│   ├── productsApi.js     # Products API endpoints
-│   ├── imagesApi.js       # Images API endpoints
-│   ├── textsApi.js        # Text styles & fonts API endpoints
-│   ├── templatesApi.js    # Templates API endpoints
-│   ├── clipartsApi.js     # Cliparts API endpoints
+├── api/                    # API layer - backend communication
+│   ├── apiUtils.js        # Request helper + error handling
+│   ├── resourceApiFactory.js # Shared list/byId/byCategory/search factory
+│   ├── shapesApi.js       # Shapes resource API
+│   ├── productsApi.js     # Products resource API
+│   ├── imagesApi.js       # Images resource API + upload endpoint
+│   ├── textsApi.js        # Text styles resource API + fonts endpoint
+│   ├── templatesApi.js    # Templates resource API
+│   ├── clipartsApi.js     # Cliparts resource API
 │   └── index.js           # API exports
 │
 ├── assets/                 # Static assets
@@ -74,13 +75,15 @@ src/
 ├── features/               # Feature-based components
 │   ├── canvas/            # Canvas editor feature
 │   │   └── CanvasEditor/
-│   │       ├── CanvasEditor.jsx      # Main canvas component (354 lines)
+│   │       ├── CanvasEditor.jsx      # Main canvas container/orchestrator
 │   │       ├── Settings.jsx          # Canvas settings panel
 │   │       ├── canvasUtils.js        # Canvas utility functions
 │   │       ├── customControls.js     # Fabric.js custom controls
 │   │       ├── dragDropHandlers.js   # Drag & drop handlers
+│   │       ├── components/           # Presentational editor pieces
 │   │       ├── factory/
 │   │       │   └── ShapesFactory.jsx # Shape creation factory
+│   │       ├── config/               # UI config for editor panels
 │   │       └── ToolboxTop/
 │   │           ├── ToolboxTop.jsx
 │   │           ├── TooltipFillOptions.jsx
@@ -89,6 +92,8 @@ src/
 │   └── sidebar/           # Sidebar feature
 │       └── Sidebar/
 │           ├── Sidebar.jsx    # Main sidebar container
+│           ├── sidebarConfig.js # Config-driven menu definition
+│           ├── components/     # Shared sidebar panel shell/state UI
 │           ├── Product.jsx    # Product selection menu
 │           ├── Images.jsx     # Images library menu
 │           ├── Text.jsx       # Text styles & fonts menu
@@ -99,8 +104,10 @@ src/
 ├── config/                 # Configuration files
 │   └── index.js           # Environment & app configuration
 │
-├── hooks/                  # Custom React hooks
-│   └── useShapes.js       # Shapes data fetching hooks
+├── hooks/                  # Shared custom React hooks
+│   ├── useLoadableData.js # Generic load/error/retry pattern
+│   ├── useShapes.js       # Shapes-oriented hooks
+│   └── index.js           # Hooks barrel export
 │
 ├── lib/                    # Utilities & helpers
 │   ├── constants/         # Application constants
@@ -165,6 +172,8 @@ Each sidebar menu follows a consistent pattern:
 - **Error handling** with retry button
 - **Empty states** when no items found
 - **Click handlers** to add items to canvas
+- **Shared shell/state components** (`SidebarPanelShell`, `SidebarGridState`)
+- **Shared data hook** (`useLoadableData`) for list loading/reload
 
 Available menus:
 - **Product**: T-shirt product selection with color customization
@@ -176,12 +185,20 @@ Available menus:
 
 ### Canvas Editor (`src/features/canvas/CanvasEditor/`)
 
-**Main Component (CanvasEditor.jsx - 354 lines)**
-- Fabric.js canvas initialization
-- T-shirt background with color filter
-- Design area (150x250px, 3:5 ratio) with clipping
-- Object selection and manipulation
+**Main Container (CanvasEditor.jsx)**
+- Fabric.js canvas initialization and lifecycle
+- T-shirt background rendering
+- Design area setup and clipping
 - Redux state integration
+- Composition of presentational subcomponents (topbar, stage, properties panel)
+
+### Architecture Patterns (Updated)
+
+- **Feature-first organization**: sidebar and canvas editor keep their own local components/config.
+- **Config-driven UI**: repetitive menu/tool/color data is moved into config files.
+- **Shared async pattern**: list fetch flows use `useLoadableData` for consistent loading/error/retry behavior.
+- **Resource API factory**: API modules use a common `createResourceApi` pattern for list/detail/category/search endpoints.
+- **Barrel exports**: `components/index.js` and `hooks/index.js` reduce import noise.
 
 **Utility Modules**
 - **canvasUtils.js**: Canvas operation utilities

@@ -7,10 +7,10 @@ import ThemeToggle from './components/ThemeToggle';
 function App() {
 
   return (
-      <div className="d-flex full-height">
-        <Sidebar></Sidebar>
-        <CanvasEditor></CanvasEditor>
-        <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
+      <div className="editor-app-shell">
+        <Sidebar />
+        <CanvasEditor />
+        <div className="app-theme-toggle">
           <ThemeToggle />
         </div>
       </div>

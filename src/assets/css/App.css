@@ -1,58 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 body {
-    background-color: var(--bg-primary, #ffffff);
-    color: var(--text-color, #1a1a1a);
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  background: #070a12;
+  color: #e8ebf7;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Light theme specific */
 body.theme-light {
-    background-color: var(--bg-light);
-    color: var(--text-primary);
+  background: #eceff5;
+  color: #0e1321;
 }
 
-/* Dark theme specific */
 body.theme-dark {
-    background-color: var(--bg-dark);
-    color: var(--text-light);
+  background: #070a12;
+  color: #e8ebf7;
 }
 
-body.theme-dark .bg-light {
-    background-color: var(--bg-dark) !important;
+.editor-app-shell {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  position: relative;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(115, 44, 86, 0.15), transparent 38%),
+    radial-gradient(circle at 28% 75%, rgba(50, 111, 178, 0.12), transparent 35%),
+    #080b13;
 }
 
-body.theme-dark .bg-white {
-    background-color: #2d2d2d !important;
+.app-theme-toggle {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1200;
+  opacity: 0.85;
 }
 
-body.theme-dark .text-dark {
-    color: var(--text-light) !important;
-}
 .center-text {
-    display: flex;
-    justify-content: center; /* horizontal */
-    align-items: center;     /* vertical */
-    text-align: center;
-    height: 100%;            /* pastikan div punya tinggi */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
 }
 
-.link-button{
-    cursor: pointer;
+.link-button {
+  cursor: pointer;
 }
 
-.link-button :hover{
-    color: var(--primary-color);
+.link-button:hover {
+  color: #7ea6ff;
 }
 
-.link-button .active{
-  color: var(--primary-color);
-}
-
-.active{
-  color: var(--primary-color);
+.link-button.active,
+.active {
+  color: #ffffff;
 }
 
 .top-left-deg {
