@@ -61,7 +61,6 @@ src/
 │   ├── imagesApi.js       # Images resource API + upload endpoint
 │   ├── textsApi.js        # Text styles resource API + fonts endpoint
 │   ├── templatesApi.js    # Templates resource API
-│   ├── clipartsApi.js     # Cliparts resource API
 │   └── index.js           # API exports
 │
 ├── assets/                 # Static assets

@@ -7,7 +7,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-
+import '../../../assets/css/clipart.css';
 import { addClipartItem } from "../../../store/components/AddCanvasItemSlice";
 import {
   searchCliparts,
