@@ -1,7 +1,7 @@
 /**
  * API Utils - Generic utilities for API calls
  */
-export { toBaseResponse } from './model/baseResponse';
+export { toBaseResponse, toResponse } from './model/baseResponse';
 
 // Loading state management
 let loadingElement = null;
@@ -96,7 +96,7 @@ export const handleApiError = async (response) => {
  * @param {boolean} showLoadingIndicator - Whether to show loading indicator (default: true)
  * @returns {Promise<any>} API response data
  */
-export const apiRequest = async (url, options = {}, showLoadingIndicator = true) => {
+export const apiRequest = async (url, options = {}, showLoadingIndicator = false) => {
   if (showLoadingIndicator) {
     showLoading();
   }
@@ -146,4 +146,31 @@ export const apiRequest = async (url, options = {}, showLoadingIndicator = true)
       hideLoading();
     }
   }
+};
+
+/**
+ * Helper for PUT request with request body
+ * @param {string} url - API endpoint URL
+ * @param {Object|FormData} body - Request payload
+ * @param {Object} options - Additional fetch options (headers, mode, credentials, etc.)
+ * @param {boolean} showLoadingIndicator - Whether to show loading indicator (default: true)
+ * @returns {Promise<any>} API response data
+ */
+export const putRequest = async (
+  url,
+  body = {},
+  options = {},
+  showLoadingIndicator = false,
+) => {
+  const isFormDataPayload = body instanceof FormData;
+
+  return apiRequest(
+    url,
+    {
+      ...options,
+      method: 'PUT',
+      body: isFormDataPayload ? body : JSON.stringify(body ?? {}),
+    },
+    showLoadingIndicator,
+  );
 };

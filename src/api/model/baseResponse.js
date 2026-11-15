@@ -36,20 +36,20 @@ const applyDataMapper = (data, mapData) => {
 
 export class BaseResponseModel {
   constructor({
-    response_code = '',
+    responseCode = '',
     status = null,
-    message_id = '',
-    message_en = '',
-    title_id = '',
-    title_en = '',
+    messageId = '',
+    messageEn = '',
+    titleId = '',
+    titleEn = '',
     data = [],
   } = {}) {
-    this.response_code = response_code;
+    this.responseCode = responseCode;
     this.status = status;
-    this.message_id = message_id;
-    this.message_en = message_en;
-    this.title_id = title_id;
-    this.title_en = title_en;
+    this.messageId = messageId;
+    this.messageEn = messageEn;
+    this.titleId = titleId;
+    this.titleEn = titleEn;
     this.data = data;
   }
 
@@ -69,16 +69,29 @@ export class BaseResponseModel {
     const mappedData = applyDataMapper(normalizedData, mapData);
 
     return new BaseResponseModel({
-      response_code: source.response_code,
+      responseCode: source.responseCode,
       status: source.status,
-      message_id: source.message_id,
-      message_en: source.message_en,
-      title_id: source.title_id,
-      title_en: source.title_en,
+      messageId: source.messageId,
+      messageEn: source.messageEn,
+      titleId: source.titleId,
+      titleEn: source.titleEn,
       data: mappedData,
     });
   }
+
+  static toResponse(payload, fallbackOrOptions = []) {
+    const source = payload && typeof payload === 'object' ? payload : {};
+    const { fallbackData, mapData } = normalizeBaseResponseOptions(fallbackOrOptions);
+
+    const hasDataField = Object.prototype.hasOwnProperty.call(source, 'data');
+    const normalizedData = hasDataField ? source.data : (Array.isArray(source) ? source : fallbackData);
+    const mappedData = applyDataMapper(normalizedData, mapData);
+
+    return mappedData;
+  }
 }
+
+
 
 /**
  * Normalize API response into a unified base response shape.
@@ -90,4 +103,16 @@ export class BaseResponseModel {
  */
 export const toBaseResponse = (payload, fallbackOrOptions = []) => {
   return BaseResponseModel.from(payload, fallbackOrOptions);
+};
+
+/**
+ * Normalize API response into a unified base response shape.
+ * @template TIn
+ * @template TOut
+ * @param {any} payload - Raw API payload
+ * @param {Array|Object|{fallbackData?: any, mapData?: DataMapper<TIn, TOut>}|null} [fallbackOrOptions=[]]
+ * @returns {BaseResponse<any>}
+ */
+export const toResponse = (payload, fallbackOrOptions = []) => {
+  return BaseResponseModel.toResponse(payload, fallbackOrOptions);
 };

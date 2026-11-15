@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { fetchShapesList, fetchShapesByCategory, searchShapes } from '../api/shapesApi';
+//import { fetchShapesList, fetchShapesByCategory, searchShapes } from '../api/shapesApi';
 import { useLoadableData } from './useLoadableData';
 
 /**
@@ -11,7 +11,7 @@ export const useShapes = () => {
     loading,
     error,
     reload,
-  } = useLoadableData(fetchShapesList);
+  } = [];
 
   return { shapes, loading, error, refetch: reload };
 };
@@ -22,7 +22,7 @@ export const useShapes = () => {
 export const useShapesByCategory = (category) => {
   const loadShapesByCategory = useCallback(async () => {
     if (!category) return [];
-    return fetchShapesByCategory(category);
+    return [];
   }, [category]);
 
   const {
@@ -52,7 +52,7 @@ export const useSearchShapes = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await searchShapes(query);
+      const data = [];
       setShapes(data);
     } catch (err) {
       setError(err.message);

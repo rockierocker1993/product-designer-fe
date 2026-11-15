@@ -1,0 +1,65 @@
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(16, 21, 35, 0.95)
+}
+
+.image-skeleton {
+    background: rgb(24 24 24 / 60%) !important;
+}
+
+/* Shimmer animation */
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.65),
+        transparent
+    );
+
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.product-card-skeleton {
+    width: 100%;
+    overflow: hidden;
+}
+
+.image-card-skeleton {
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    padding-left: 11px;
+}
+
+.skeleton-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+.profile-skeleton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-skeleton-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

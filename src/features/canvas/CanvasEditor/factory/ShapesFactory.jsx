@@ -1,5 +1,4 @@
 import { fabric } from "fabric";
-import { fetchShapeById } from "../../../../api/shapesApi";
 
 /**
  * Create shape from API SVG data
@@ -10,7 +9,7 @@ import { fetchShapeById } from "../../../../api/shapesApi";
 export const createShapeFromAPI = async (canvas, shapeId, config) => {
   try {
     console.log('Fetching shape from API:', shapeId);
-    const shapeData = await fetchShapeById(shapeId);
+    const shapeData = {};
     
     console.log('Shape data received:', shapeData);
     
