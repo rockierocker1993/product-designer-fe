@@ -1,7 +1,8 @@
 
 import './assets/css/App.css'
 import Leftbar from './features/sidebar/leftbar/Leftbar';
-import CanvasEditor from './features/canvas/CanvasEditor/CanvasEditor';
+import CanvasEditor from './features/canvas/CanvasEditor';
+import Rightbar from './features/sidebar/rightbar/Rightbar';
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
         <CanvasEditor />
         <div className="app-theme-toggle">
         </div>
+        <Rightbar />
       </div>
   )
 }

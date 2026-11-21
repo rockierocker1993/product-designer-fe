@@ -17,6 +17,18 @@ export class ImageModel {
     this.category = category;
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      urlThumbnail: this.urlThumbnail,
+      format: this.format,
+      width: this.width,
+      height: this.height,
+      category: this.category
+    };
+  }
+
   /**
    * @param {ClipartRaw} item
    * @returns {ImageModel}

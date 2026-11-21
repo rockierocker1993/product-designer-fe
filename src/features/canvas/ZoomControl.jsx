@@ -8,6 +8,7 @@ const ZoomControl = ({ canvas }) => {
   // stays visually centred; no CSS transform or scroll tricks needed.
   useEffect(() => {
     if (!canvas) return;
+    console.log("ZoomControl: canvas", canvas);
     const zoomValue = scale / 100;
     const center = new fabric.Point(canvas.width / 2, canvas.height / 2);
     canvas.zoomToPoint(center, zoomValue);
@@ -40,10 +41,10 @@ const ZoomControl = ({ canvas }) => {
   };
 
   return canvas ? (
-    <div className="kittl-zoom-control">
+    <div className="canvas-zoom-control">
       <button
         onClick={handleScaleDown}
-        className="kittl-zoom-btn"
+        className="canvas-zoom-btn"
         type="button"
         aria-label="Zoom out"
       >
@@ -56,16 +57,16 @@ const ZoomControl = ({ canvas }) => {
         max="300"
         value={scale}
         onChange={handleScaleSlider}
-        className="kittl-zoom-range"
+        className="canvas-zoom-range"
       />
 
-      <span className="kittl-zoom-value">
+      <span className="canvas-zoom-value">
         {scale}%
       </span>
 
       <button
         onClick={handleScaleUp}
-        className="kittl-zoom-btn"
+        className="canvas-zoom-btn"
         type="button"
         aria-label="Zoom in"
       >

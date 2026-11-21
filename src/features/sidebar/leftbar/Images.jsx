@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Plus } from "lucide-react";
-import { addImageItem } from "../../../store/components/AddCanvasItemSlice";
 import {
   searchImages,
 } from "../../../api/designDataToolsApi";
 
 import { LeftbarPanelShell } from "../";
-import { useLoadableData } from "../../../hooks";
 import { CardPreviewAnimationSkeleton, UploadImageSkeleton } from "../../../components/SkeletonAnimation";
+import { addImage } from "../../../store/CanvasAddItem";
 
 const PAGE_SIZE = 30;
 const SKELETON_ANIMATION_SIZE = 9;
@@ -176,8 +175,8 @@ const Images = () => {
   }, [loadMore, loading, hasMore, imageItems.length]);
 
   // Handle image selection
-  const handleImageClick = (imageId) => {
-    dispatch(addImageItem(`image-${imageId}`));
+  const handleImageClick = (image) => {
+    dispatch(addImage({ type: "image", data: image.toJSON() }));
   };
 
 
@@ -246,7 +245,7 @@ const Images = () => {
                   <div
                     key={image.id}
                     className="sidebar-card-btn"
-                    onClick={() => handleImageClick(image.id)}
+                    onClick={() => handleImageClick(image)}
                     onKeyDown={(event) => {
                       if (
                         event.key === "Enter" ||
