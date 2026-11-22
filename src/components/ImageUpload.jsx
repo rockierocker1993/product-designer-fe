@@ -83,7 +83,7 @@ export const ImageUpload = ({ onSuccess, onFailed, onProgress, onUpload }) => {
     };
     return (
         <div className="sidebar-wrapper">
-            <button className="tool-property-btn" type="button" onClick={handleChooseFile}>
+            <button className="chip-btn width-full content-left" type="button" onClick={handleChooseFile}>
                 <Upload size={14} />
                 Upload
             </button>

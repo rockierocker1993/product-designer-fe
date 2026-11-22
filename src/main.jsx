@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/css/index.css'
 import './styles/global.css'
 import './assets/css/button-custom.css'
 import { StrictMode } from 'react'

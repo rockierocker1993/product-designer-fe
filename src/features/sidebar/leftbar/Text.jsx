@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Plus } from "lucide-react";
-import { addTextItem } from "../../../store/components/AddCanvasItemSlice";
+import { Plus, TextInitialIcon } from "lucide-react";
+import { addText } from "../../../store/CanvasAddItem";
 import {
   searchText,
 } from "../../../api/designDataToolsApi";
 
 import { LeftbarPanelShell } from "../";
-import { useLoadableData } from "../../../hooks";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
+import { TextModel } from "../../../api/model/text";
 
 const PAGE_SIZE = 30;
 const SKELETON_ANIMATION_SIZE = 9;
@@ -174,8 +174,10 @@ const Text = () => {
   }, [loadMore, loading, hasMore, textItems.length]);
 
   // Handle text selection
-  const handleTextClick = (textId) => {
-    dispatch(addTextItem(`text-${textId}`));
+  const handleTextClick = (text) => {
+    const jsonText = text.toJSON();
+    jsonText.text = "Your Design";
+    dispatch(addText({ type: "text", data: text.toJSON() }));
   };
 
 
@@ -195,6 +197,17 @@ const Text = () => {
         selectedCategory: selectedCategory,
         handleCategoryChange: handleCategoryChange
       }}
+      customAction={
+        <div className="sidebar-wrapper">
+          <button className="chip-btn width-full content-left" type="button" onClick={() => {
+            const text = { text: "Your Design Here  " };
+            dispatch(addText({ type: "text", data: text }));
+          }}>
+            <TextInitialIcon size={14} />
+            Add Text
+          </button>
+        </div>
+      }
     >
       <div className="sidebar-showcase-content" ref={scrollContainerRef}>
         <div className="sidebar-grid">
@@ -205,14 +218,14 @@ const Text = () => {
                   <div
                     key={text.id}
                     className="sidebar-card-btn"
-                    onClick={() => handleTextClick(text.id)}
+                    onClick={() => handleTextClick(text)}
                     onKeyDown={(event) => {
                       if (
                         event.key === "Enter" ||
                         event.key === " "
                       ) {
                         event.preventDefault();
-                        handleTextClick(text.id);
+                        handleTextClick(text);
                       }
                     }}
                     role="button"

@@ -1,7 +1,13 @@
 import { fabric } from "fabric";
 import { customTransformControl, setupControlsVisibility } from "./canvasObjectSellectionControll.js"
+import { createCanvasEventHandlers, cleanCanvasEventHandlers } from "./canvasEventHandlerControll.js"
+import {
+    ALIGNMENT_LEFT, ALIGNMENT_CENTER,
+    ALIGNMENT_RIGHT, ALIGNMENT_TOP,
+    ALIGNMENT_MIDDLE, ALIGNMENT_BOTTOM
+} from "../../../constant.jsx";
 
-export const initializeCanvas = async (containerRef,fabricRef,canvasRef, config) => {
+export const initializeCanvas = async (containerRef, fabricRef, canvasRef, calculatedBoundaryRef, config, dispatch) => {
     const container = containerRef.current;
 
     if (!container || !canvasRef.current) return;
@@ -16,7 +22,7 @@ export const initializeCanvas = async (containerRef,fabricRef,canvasRef, config)
         height: workspaceHeight,
         backgroundColor: null,
     });
-
+    
     fabricRef.current = canvas;
 
     // ==================================
@@ -45,27 +51,31 @@ export const initializeCanvas = async (containerRef,fabricRef,canvasRef, config)
     // ==================================
 
     if (config.designMode === "BOUNDARY") {
+        config.boundary.top = config.boundary.top + productTop;
+        config.boundary.left = config.boundary.left + productLeft;
+        calculatedBoundaryRef.current = config.boundary;
         const designArea = buildDesignAreaBoundary({
-            top: config.boundary.top + productTop,
-            left: config.boundary.left + productLeft,
+            top: config.boundary.top,
+            left: config.boundary.left,
             width: config.boundary.width,
             height: config.boundary.height,
         });
+        console.log("boundary", config.boundary);
         canvas.add(designArea);
     }
     // ==================================
     // 3. Object Added Event
     // ==================================
 
-    createCanvasEventHandlers(canvas, maskImage, config.outsideOpacity, config.outsideOpacity);
+    createCanvasEventHandlers(canvas, maskImage, config, dispatch);
     eventHandlersInitialized = true;
-    
+
     customTransformControl();
     setupControlsVisibility();
     fabric.Object.prototype.set({
-      transparentCorners: false,
-      cornerColor: 'transparent',
-      borderColor: 'transparent',
+        transparentCorners: false,
+        cornerColor: 'transparent',
+        borderColor: 'transparent',
     });
 
     canvas.requestRenderAll();
@@ -113,215 +123,6 @@ export const resizeCanvas = (canvasRef, containerRef, originalWorkspaceHeight, o
 
     canvas.renderAll();
     */
-};
-
-
-/**
- * Membuat efek transparansi pada bagian objek
- * yang berada di luar Design Boundary.
- *
- * Objek tetap satu instance Fabric.js.
- */
-export const applyPartialTransparency = async (object, DESIGN_BOUNDARY, CANVAS_WIDTH, CANVAS_HEIGHT, OUTSIDE_OPACITY) => {
-    if (object.__partialTransparencyApplied) return;
-    const originalRender = object.render.bind(object);
-    object.__partialTransparencyApplied = true;
-    object.render = function (ctx) {
-        // Saat export, render objek secara normal.
-        if (this.canvas?.__exporting) {
-            originalRender(ctx);
-            return;
-        }
-        const { left, top, width, height } = DESIGN_BOUNDARY;
-        const right = left + width;
-        const bottom = top + height;
-        ctx.save();
-        // ==================================
-        // 1. Render area luar opacity ${OUTSIDE_OPACITY}
-        // ==================================
-        ctx.globalAlpha *= OUTSIDE_OPACITY;
-        ctx.beginPath();
-        // Area atas
-        ctx.rect(0, 0, CANVAS_WIDTH, top);
-        // Area bawah
-        ctx.rect(0, bottom, CANVAS_WIDTH, CANVAS_HEIGHT - bottom);
-        // Area kiri
-        ctx.rect(0, top, left, height);
-        // Area kanan
-        ctx.rect(right, top, CANVAS_WIDTH - right, height);
-        ctx.clip();
-        originalRender(ctx);
-        ctx.restore();
-        // ==================================
-        // 2. Render area dalam opacity 100%
-        // ==================================
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(left, top, width, height);
-        ctx.clip();
-        originalRender(ctx);
-        ctx.restore();
-    };
-}
-
-export const applyImageShapeTransparency = (
-    object,
-    maskImage,
-    OUTSIDE_OPACITY = 0.2
-) => {
-    if (!object || !maskImage) {
-        throw new Error("Object dan maskImage wajib tersedia");
-    }
-
-    if (object.__imageShapeTransparencyApplied) {
-        return object.__imageShapeTransparencyCleanup;
-    }
-
-    const originalRender = object.render.bind(object);
-
-    const objectCanvas = document.createElement("canvas");
-    const maskCanvas = document.createElement("canvas");
-    const outsideCanvas = document.createElement("canvas");
-    const insideCanvas = document.createElement("canvas");
-    const resultCanvas = document.createElement("canvas");
-
-    const objectCtx = objectCanvas.getContext("2d");
-    const maskCtx = maskCanvas.getContext("2d");
-    const outsideCtx = outsideCanvas.getContext("2d");
-    const insideCtx = insideCanvas.getContext("2d");
-    const resultCtx = resultCanvas.getContext("2d");
-
-    const resizeCanvas = (canvas, width, height) => {
-        if (canvas.width !== width || canvas.height !== height) {
-            canvas.width = width;
-            canvas.height = height;
-        }
-    };
-
-    // FIX: Bersihkan seluruh buffer dengan identity transform
-    const clearCanvas = (ctx, width, height) => {
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, width, height);
-        ctx.restore();
-    };
-
-    object.__imageShapeTransparencyApplied = true;
-
-    object.render = function (ctx) {
-        // Export menggunakan rendering normal
-        if (this.canvas?.__exporting) {
-            originalRender(ctx);
-            return;
-        }
-
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
-
-        resizeCanvas(objectCanvas, width, height);
-        resizeCanvas(maskCanvas, width, height);
-        resizeCanvas(outsideCanvas, width, height);
-        resizeCanvas(insideCanvas, width, height);
-        resizeCanvas(resultCanvas, width, height);
-
-        const transform = ctx.getTransform();
-
-        // ==========================================
-        // 1. Render objek desain
-        // ==========================================
-
-        clearCanvas(objectCtx, width, height);
-
-        objectCtx.setTransform(transform);
-        originalRender(objectCtx);
-
-        // ==========================================
-        // 2. Render alpha mask
-        // ==========================================
-
-        clearCanvas(maskCtx, width, height);
-
-        const maskElement = maskImage.getElement();
-        const maskTransform = maskImage.calcTransformMatrix();
-
-        maskCtx.setTransform(transform);
-        maskCtx.transform(...maskTransform);
-
-        maskCtx.drawImage(
-            maskElement,
-            -maskImage.width / 2,
-            -maskImage.height / 2,
-            maskImage.width,
-            maskImage.height
-        );
-
-        // ==========================================
-        // 3. Outside area
-        // ==========================================
-
-        clearCanvas(outsideCtx, width, height);
-
-        outsideCtx.globalCompositeOperation = "source-over";
-        outsideCtx.drawImage(objectCanvas, 0, 0);
-
-        outsideCtx.globalCompositeOperation = "destination-out";
-        outsideCtx.drawImage(maskCanvas, 0, 0);
-
-        outsideCtx.globalCompositeOperation = "source-over";
-
-        // ==========================================
-        // 4. Inside area
-        // ==========================================
-
-        clearCanvas(insideCtx, width, height);
-
-        insideCtx.globalCompositeOperation = "source-over";
-        insideCtx.drawImage(objectCanvas, 0, 0);
-
-        insideCtx.globalCompositeOperation = "destination-in";
-        insideCtx.drawImage(maskCanvas, 0, 0);
-
-        insideCtx.globalCompositeOperation = "source-over";
-
-        // ==========================================
-        // 5. Combine
-        // ==========================================
-
-        clearCanvas(resultCtx, width, height);
-
-        resultCtx.globalAlpha = OUTSIDE_OPACITY;
-        resultCtx.drawImage(outsideCanvas, 0, 0);
-
-        resultCtx.globalAlpha = 1;
-        resultCtx.drawImage(insideCanvas, 0, 0);
-
-        resultCtx.globalAlpha = 1;
-        resultCtx.globalCompositeOperation = "source-over";
-
-        // ==========================================
-        // 6. Draw result to Fabric context
-        // ==========================================
-
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.drawImage(resultCanvas, 0, 0);
-        ctx.restore();
-    };
-
-    const cleanup = () => {
-        object.render = originalRender;
-
-        object.__imageShapeTransparencyApplied = false;
-        delete object.__imageShapeTransparencyCleanup;
-
-        object.canvas?.requestRenderAll();
-    };
-
-    object.__imageShapeTransparencyCleanup = cleanup;
-
-    object.canvas?.requestRenderAll();
-
-    return cleanup;
 };
 
 export const buildProductMockup = (
@@ -396,7 +197,6 @@ export const buildProductMockup = (
     });
 };
 
-
 export const buildDesignAreaBoundary = (DESIGN_BOUNDARY) => {
     const designArea = new fabric.Rect({
         left: DESIGN_BOUNDARY.left,
@@ -415,29 +215,95 @@ export const buildDesignAreaBoundary = (DESIGN_BOUNDARY) => {
     return designArea;
 };
 
-export const createCanvasEventHandlers = (canvas, maskImage, outsideOpacity, DESIGN_MODE) => {
-    const handleObjectAdded = (event) => {
-        const object = event.target;
-        if (
-            !object ||
-            object.isDesignBoundary ||
-            object.isProductBackground
-        ) {
+
+/**
+ * Move selected object to specific position within design area.
+ *
+ * @param {fabric.Canvas} canvas
+ * @param {Object} boundary - Design area boundary
+ * @param {number} backgroundPadding
+ * @param {string} positionCode
+ */
+export const alignmentSelectedObject = (
+    canvas,
+    boundary,
+    positionCode
+) => {
+    if (!canvas || !boundary) return;
+
+    const activeObject = canvas.getActiveObject();
+    if (!activeObject) return;
+    const objWidth = activeObject.getScaledWidth();
+    const objHeight = activeObject.getScaledHeight();
+    const left = boundary.left + (objWidth / 2);
+    const top = boundary.top + (objHeight / 2);
+    const boundaryWidth = boundary.width;
+    const boundaryHeight = boundary.height;
+    const centerX = left + (boundaryWidth / 2);
+    const centerY = top + (boundaryHeight / 2);
+
+    switch (positionCode) {
+        case ALIGNMENT_LEFT:
+            activeObject.set({
+                left: left
+            });
+            break;
+
+        case ALIGNMENT_RIGHT:
+            activeObject.set({
+                left: left + boundaryWidth - objWidth
+            });
+            break;
+
+        case ALIGNMENT_CENTER:
+            activeObject.set({
+                left: centerX - (objWidth / 2)
+            });
+            break;
+
+        case ALIGNMENT_TOP:
+            activeObject.set({
+                top: top
+            });
+            break;
+
+        case ALIGNMENT_BOTTOM:
+            activeObject.set({
+                top: top + boundaryHeight - objHeight
+            });
+            break;
+
+        case ALIGNMENT_MIDDLE:
+            activeObject.set({
+                top: centerY - (objHeight / 2)
+            });
+            break;
+
+        default:
             return;
-        }
-        if (DESIGN_MODE === "BOUNDARY") {
-            return;
-        } else {
-            applyImageShapeTransparency(
-                object,
-                maskImage,
-                outsideOpacity
-            );
-        }
-    };
-    canvas.on("object:added", handleObjectAdded);
+    }
+
+    activeObject.setCoords();
+    canvas.requestRenderAll();
 };
 
-export const cleanCanvasEventHandlers = (canvas) => {
-    canvas.off("object:added");
+export const transformSelectedObject = (canvas, objectTransform) => {
+  if (!canvas) return;
+  
+  const activeObject = canvas.getActiveObject();
+  if (!activeObject) return;
+
+  const { rotate, skewX, skewY, flipX, flipY, width, height } = objectTransform;
+   activeObject.set({
+    skewX,
+    skewY,
+    flipX,
+    flipY,
+    scaleX: width / activeObject.width,
+    scaleY: height / activeObject.height,
+    angle: rotate
+  });
+
+  activeObject.setCoords();
+  canvas.requestRenderAll();
 };

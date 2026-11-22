@@ -66,8 +66,7 @@ src/
 ├── assets/                 # Static assets
 │   ├── css/               # Component-specific CSS files
 │   │   ├── App.css
-│   │   ├── canvas-editor.css
-│   │   ├── index.css
+│   │   ├── canvas.css
 │   │   └── sidebar.css
 │   └── fonts/             # Custom fonts (if any)
 │
@@ -145,6 +144,16 @@ src/
 - **Vite** - Build tool and dev server with HMR
 - **Bootstrap 5** - UI components and responsive grid
 - **Lucide Icons** - Modern icon library for custom controls
+
+## Styling
+
+Shared design tokens and reusable controls live in `src/styles/global.css`;
+feature styles live in `src/assets/css/`. Use the `--font-size-*`,
+`--editor-*`, radius and shadow tokens instead of introducing new one-off
+values. The editor uses a dark surface palette independently of the page theme.
+General theme colors such as `--primary-color` are still configured through
+the `VITE_*` theme settings; adjust `--editor-accent` and its related tokens
+in `global.css` to change the editor's blue accent.
 
 ## 📦 Available Scripts
 

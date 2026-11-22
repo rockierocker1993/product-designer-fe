@@ -1,7 +1,7 @@
 
 .collapsible-section {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--editor-hover);
+    border: 1px solid var(--editor-hover-strong);
     border-radius: 10px;
     padding: 10px;
     display: flex;
@@ -22,13 +22,17 @@
     gap: 8px;
 }
 
+.collapsible-section-body[hidden] {
+    display: none;
+}
+
 .collapsible-collapse-btn {
     width: 22px;
     height: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid var(--editor-border-strong);
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.03);
-    color: #a9bbdb;
+    background: var(--editor-control);
+    color: var(--editor-text-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -38,9 +42,9 @@
 }
 
 .collapsible-collapse-btn:hover {
-    color: #ecf3ff;
-    border-color: rgba(126, 166, 255, 0.78);
-    background: rgba(126, 166, 255, 0.16);
+    color: var(--editor-text-strong);
+    border-color: var(--editor-focus);
+    background: var(--editor-accent-soft);
 }
 
 .collapsible-section.is-collapsed {
@@ -49,8 +53,8 @@
 
 .collapsible-section-title {
     margin: 0;
-    color: #eaf0ff;
-    font-size: 11px;
+    color: var(--editor-text);
+    font-size: var(--font-size-xxs);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;

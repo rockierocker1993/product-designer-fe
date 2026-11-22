@@ -1,33 +1,35 @@
 .rightbar-container {
     height: 100vh;
     min-height: 0;
+    min-width: 0;
+    flex: 0 0 clamp(200px, 32vw, 300px);
     display: flex;
     flex-direction: column;
     background:
-        radial-gradient(circle at 12% -10%, rgba(121, 194, 255, 0.1), transparent 42%),
-        #111724;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+        radial-gradient(circle at 12% -10%, var(--editor-glow-cool), transparent 42%),
+        var(--editor-card);
+    border-left: 1px solid var(--editor-border);
     max-width: 300px;
 }
 
 .rightbar-container-header {
     padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(10, 15, 24, 0.86);
+    border-bottom: 1px solid var(--editor-border);
+    background: var(--editor-input-background);
 }
 
 .rightbar-container-header h3 {
     margin: 0;
-    color: #f3f7ff;
-    font-size: 13px;
+    color: var(--editor-text-strong);
+    font-size: var(--font-size-base);
     font-weight: 700;
     letter-spacing: 0.02em;
 }
 
 .rightbar-container-header p {
     margin: 4px 0 0;
-    color: #9fb0cf;
-    font-size: 11px;
+    color: var(--editor-text-muted);
+    font-size: var(--font-size-xxs);
 }
 
 .rightbar-container-content {
@@ -45,16 +47,16 @@
 }
 
 .rightbar-container-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--editor-control);
 }
 
 .rightbar-container-content::-webkit-scrollbar-thumb {
-    background: rgba(149, 173, 221, 0.45);
+    background: var(--editor-scrollbar);
     border-radius: 999px;
 }
 
 .rightbar-container-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(149, 173, 221, 0.62);
+    background: var(--editor-scrollbar);
 }
 
 .rp-object-align-icon {
@@ -165,40 +167,15 @@
     bottom: 3px;
 }
 
-
-
-.rp-badge {
-    border-radius: 999px;
-    background: rgba(126, 166, 255, 0.2);
-    color: #cfe0ff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 5px 7px;
-}
-
-.rp-outline-btn,
-.rp-secondary-btn,
-.rp-primary-btn {
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.03);
-    color: #e5edff;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 8px 10px;
-    transition: all 0.2s ease;
-}
-
-.rp-outline-btn:hover,
-.rp-secondary-btn:hover,
-.rp-primary-btn:hover {
-    border-color: rgba(126, 166, 255, 0.75);
-    background: rgba(126, 166, 255, 0.16);
-}
-
-.rp-footer-actions {
-    margin-top: 2px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+@media (max-width: 480px) {
+    .rightbar-container {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 5;
+        width: calc(100% - 56px);
+        max-width: none;
+        height: min(40vh, 300px);
+        border-top: 1px solid var(--editor-border);
+    }
 }

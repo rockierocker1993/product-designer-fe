@@ -81,14 +81,14 @@ const TextProperties = () => {
 					aria-label="Text color"
 				/>
 				<span className="badge-percentage">#FFFFFF</span>
-				<div class="input-percentage">
+				<div className="input-percentage">
 					<input
 						type="number"
 						min="1"
 						max="100"
 						step="1"
 					/>
-					<span class="percentage-suffix">%</span>
+					<span className="percentage-suffix">%</span>
 				</div>
 			</div>
 			<button className="outline-btn" type="button">
@@ -103,14 +103,14 @@ const TextProperties = () => {
 						aria-label="Text color"
 					/>
 					<span className="badge-percentage">#FFFFFF</span>
-					<div class="input-percentage">
+					<div className="input-percentage">
 						<input
 							type="number"
 							min="1"
 							max="100"
 							step="1"
 						/>
-						<span class="percentage-suffix">%</span>
+						<span className="percentage-suffix">%</span>
 					</div>
 				</div>
 				<div className="mt-0">
@@ -211,14 +211,14 @@ const TextProperties = () => {
 						aria-label="Text color"
 					/>
 					<span className="badge-percentage">#FFFFFF</span>
-					<div class="input-percentage">
+					<div className="input-percentage">
 						<input
 							type="number"
 							min="1"
 							max="100"
 							step="1"
 						/>
-						<span class="percentage-suffix">%</span>
+						<span className="percentage-suffix">%</span>
 					</div>
 				</div>
 
@@ -272,14 +272,14 @@ const TextProperties = () => {
 						aria-label="Text color"
 					/>
 					<span className="badge-percentage">#FFFFFF</span>
-					<div class="input-percentage">
+					<div className="input-percentage">
 						<input
 							type="number"
 							min="1"
 							max="100"
 							step="1"
 						/>
-						<span class="percentage-suffix">%</span>
+						<span className="percentage-suffix">%</span>
 					</div>
 				</div>
 

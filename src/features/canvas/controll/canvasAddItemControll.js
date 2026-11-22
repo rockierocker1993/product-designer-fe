@@ -13,10 +13,11 @@ export const addImage = (canvas, url, options = {}) => {
                     reject(new Error("Failed to load image from URL"));
                     return;
                 }
-                const { scale, canvasWidth, canvasHeight } = calculateSizeItem(canvas, options, img.width, img.height);
+                const { scale } = calculateSizeItem(canvas, options, img.width, img.height);
+                const { left, top } = getMiddleCenterBoundary(img.width, img.height, options.boundary);
                 img.set({
-                    left: options.left ?? canvasWidth / 2,
-                    top: options.top ?? canvasHeight / 2,
+                    left: left,
+                    top: top,
                     originX: "center",
                     originY: "center",
                     scaleX: scale,
@@ -38,6 +39,42 @@ export const addImage = (canvas, url, options = {}) => {
             }
         );
     });
+};
+
+export const addText = async (
+    canvas,
+    textValue = "Your Design",
+    options = {}
+) => {
+    if (!canvas) return null;
+
+    const fontFamily = options.fontFamily ?? "Arial";
+    const fontSize = options.fontSize ?? 40;
+
+    await document.fonts.load(`${options.fontWeight ?? "normal"} ${fontSize}px "${fontFamily}"`);
+    const { left, top } = getMiddleCenterBoundary(100, 30, options.boundary);
+    const text = new fabric.IText(textValue, {
+        left: left,
+        top: top,
+        originX: "center",
+        originY: "center",
+        fontFamily,
+        fontSize,
+        fontWeight: options.fontWeight ?? "normal",
+        fontStyle: options.fontStyle ?? "normal",
+        fill: options.fill ?? "#000000",
+        textAlign: options.textAlign ?? "center",
+        selectable: true,
+        editable: true,
+        evented: true,
+        ...options,
+    });
+
+    canvas.add(text);
+    canvas.setActiveObject(text);
+    canvas.requestRenderAll();
+
+    return text;
 };
 
 
@@ -68,4 +105,16 @@ function calculateSizeItem(canvas, options, objectWidth, objectHeight) {
         maxWidth: maxWidth,
         maxHeight: maxHeight
     }
+}
+
+export function getMiddleCenterBoundary(objWidth, objHeight, boundary) {
+    if (!boundary) return null;
+    const left = boundary.left + (objWidth / 2);
+    const top = boundary.top + (objHeight / 2);
+    const centerX = left + (boundary.width / 2);
+    const centerY = top + (boundary.height / 2);
+    return {
+        left: centerX - (objWidth / 2),
+        top: centerY - (objHeight / 2)
+    };
 }

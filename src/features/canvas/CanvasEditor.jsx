@@ -1,6 +1,5 @@
 // import ToolboxTop from "./ToolboxTop/ToolboxTop.jsx";
 // import { useState, useEffect, useRef } from "react";
-// import '../../../assets/css/canvas-editor.css';
 // import { fabric } from "fabric";
 // import { useDispatch, useSelector } from "react-redux";
 // import { breakStateAddShapesItem } from "../../../store/components/AddCanvasItemSlice";

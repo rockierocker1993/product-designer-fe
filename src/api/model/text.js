@@ -11,6 +11,14 @@ export class TextModel {
     this.category = category;
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      urlThumbnail: this.urlThumbnail,
+      category: this.category
+    };
+  }
   /**
    * @param {TextRaw} item
    * @returns {TextModel}

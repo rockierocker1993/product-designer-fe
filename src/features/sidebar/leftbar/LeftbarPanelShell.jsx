@@ -5,6 +5,7 @@ import { CategoryFilter } from "../../../components/CategoryFilter";
 
 const LeftbarPanelShell = ({
   search,
+  customAction,
   categoryFilter,
   uploadImage,
   children,
@@ -47,6 +48,7 @@ const LeftbarPanelShell = ({
       <div className="sidebar-content">
         {searchBar ? searchBar : null}
         {uploadImageBar ? uploadImageBar : null}
+        {customAction ? customAction : null}
         {categoryFilterBar ? categoryFilterBar : <><div>tak ada</div></>}
         {children}
         {footer ? <div className="sidebar-footer">{footer}</div> : null}
