@@ -184,7 +184,7 @@ const Product = () => {
   }
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -278,7 +278,7 @@ const Product = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 

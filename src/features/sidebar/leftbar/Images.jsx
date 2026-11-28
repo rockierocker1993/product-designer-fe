@@ -210,7 +210,7 @@ const Images = () => {
   }
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -318,7 +318,7 @@ const Images = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 

@@ -6,7 +6,7 @@ import {
   searchText,
 } from "../../../api/designDataToolsApi";
 
-import { LeftbarPanelShell } from "../";
+import { PanelShell } from "../";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
 import { TextModel } from "../../../api/model/text";
 
@@ -186,7 +186,7 @@ const Text = () => {
   }
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -291,7 +291,7 @@ const Text = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 

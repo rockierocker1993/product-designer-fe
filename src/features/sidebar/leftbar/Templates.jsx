@@ -6,8 +6,7 @@ import {
   searchTemplate,
 } from "../../../api/designDataToolsApi";
 
-import { LeftbarPanelShell } from "../";
-import { useLoadableData } from "../../../hooks";
+import { PanelShell } from "../";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
 
 const PAGE_SIZE = 30;
@@ -184,7 +183,7 @@ const Template = () => {
   }
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -278,7 +277,7 @@ const Template = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 

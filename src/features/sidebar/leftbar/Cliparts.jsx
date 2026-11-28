@@ -9,7 +9,7 @@ import {
   searchCliparts,
 } from "../../../api/designDataToolsApi";
 
-import { LeftbarPanelShell } from "../";
+import { PanelShell } from "../";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
 
 const PAGE_SIZE = 30;
@@ -188,7 +188,7 @@ const Cliparts = () => {
 
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -287,7 +287,7 @@ const Cliparts = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 

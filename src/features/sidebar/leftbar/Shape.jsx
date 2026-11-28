@@ -1,20 +1,14 @@
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Search,
+  Plus
 } from "lucide-react";
-import { addShapesItem } from "../../../store/components/AddCanvasItemSlice";
 import {
   searchShape,
-  getCategory,
 } from "../../../api/designDataToolsApi";
 
-import { LeftbarPanelShell } from "../";
-import { useLoadableData } from "../../../hooks";
+import { PanelShell } from "../";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
 
 const PAGE_SIZE = 30;
@@ -193,7 +187,7 @@ const Shape = () => {
 
 
   return (
-    <LeftbarPanelShell
+    <PanelShell
       search={{
         searchTerm: searchTerm,
         setSearchTerm: setSearchTerm,
@@ -292,7 +286,7 @@ const Shape = () => {
         </div>
       </div>
       <div style={{ marginBottom: 4 }}></div>
-    </LeftbarPanelShell>
+    </PanelShell>
   );
 };
 
