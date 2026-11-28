@@ -287,13 +287,13 @@ export const alignmentSelectedObject = (
     canvas.requestRenderAll();
 };
 
-export const transformSelectedObject = (canvas, objectTransform) => {
+export const transformSelectedObject = (canvas, propertiesValue) => {
   if (!canvas) return;
   
   const activeObject = canvas.getActiveObject();
   if (!activeObject) return;
 
-  const { rotate, skewX, skewY, flipX, flipY, width, height } = objectTransform;
+  const { rotate, skewX, skewY, flipX, flipY, width, height, opacity } = propertiesValue;
    activeObject.set({
     skewX,
     skewY,
@@ -301,7 +301,8 @@ export const transformSelectedObject = (canvas, objectTransform) => {
     flipY,
     scaleX: width / activeObject.width,
     scaleY: height / activeObject.height,
-    angle: rotate
+    angle: rotate,
+    opacity: opacity / 100.0
   });
 
   activeObject.setCoords();

@@ -254,12 +254,84 @@
 // };
 
 // export default CanvasEditor;
+import { useRef, useState } from "react";
 import Canvas from "./Canvas";
+import MockupSwitcher from "./MockupSwitcher";
 const CanvasEditor = () => {
-    
+    const product = {
+        configs: [
+            {   
+                position: "FRONT",
+                designMode:"BOUNDARY",
+                mockupUrl: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                mockupUrlThumbnail: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                width: 500,
+                height: 600,
+                mockupBackgroundColor: "#f5f5f5",
+                mockupBackgroundPadding: 100,
+                outsideOpacity: 0.05,
+                boundary: {
+                    left: 0,
+                    top: 0,
+                    width: 300,
+                    height: 450,
+                }
+            },
+            {
+                position: "BACK",
+                designMode:"BOUNDARY",
+                mockupUrl: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                mockupUrlThumbnail: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                width: 500,
+                height: 600,
+                mockupBackgroundColor: "#f5f5f5",
+                mockupBackgroundPadding: 100,
+                outsideOpacity: 0.05,
+                boundary: {
+                    left: 0,
+                    top: 0,
+                    width: 300,
+                    height: 450,
+                }
+            },
+            {
+                position: "SLEEVE",
+                designMode:"BOUNDARY",
+                mockupUrl: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                mockupUrlThumbnail: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
+                width: 500,
+                height: 600,
+                mockupBackgroundColor: "#f5f5f5",
+                mockupBackgroundPadding: 100,
+                outsideOpacity: 0.05,
+                boundary: {
+                    left: 0,
+                    top: 0,
+                    width: 300,
+                    height: 450,
+                }
+            }
+        ]
+    }
+    const [productMockupView, setProductMockupView] = useState(product.configs[0].position);
+    const canvasWorkspaceRef = useRef(null);
     return (
         <div className="editor-container">
-            <Canvas />
+            <div className="canvas-workspace" ref={canvasWorkspaceRef}>
+                {product.configs.map((config) => (
+                    <Canvas
+                        key={config.position}
+                        isActive={config.position === productMockupView}
+                        config={config}
+                        canvasWorkspaceRef={canvasWorkspaceRef}
+                    />
+                ))}
+            </div>
+            <MockupSwitcher
+                mockupViews={product.configs}
+                activeView={productMockupView}
+                onChange={(view) => { setProductMockupView(view) }}
+            />
         </div>
     );
 };

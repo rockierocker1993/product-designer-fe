@@ -1,2 +1,2 @@
-export { default as LeftbarPanelShell } from "./leftbar/LeftbarPanelShell";
+export { default as LeftbarPanelShell } from "../../components/PanelShell";
 export { default as LeftbarGridState } from "./leftbar/LeftbarGridState";

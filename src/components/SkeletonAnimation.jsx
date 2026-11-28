@@ -90,3 +90,25 @@ export const CardPreviewAnimationSkeleton = ({ count, className }) => {
     }
     return <>{skeletons}</>;
 };
+
+export const PropertiesAnimationSkeleton = () => {
+    return (
+        <div className="properties-skeleton">
+            <Skeleton width="100%" height={60} radius={10} className="mb-3 mt-3"/>
+            <div className="skeleton-content">
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-3"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-3"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-3"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+                <Skeleton width="100%" height={20} className="mb-1"/>
+            </div>
+        </div>
+    );
+};

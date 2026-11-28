@@ -5,48 +5,33 @@ import { addImage, addText } from "./controll/canvasAddItemControll";
 import "../../assets/css/canvas.css";
 import ZoomControl from "./ZoomControl";
 import { alignment } from "../../store/ObjectAlignment";
-import MockupSwitcher from "./MockupSwitcher";
 
-const PRODUCT_WIDTH = 500;
-const PRODUCT_HEIGHT = 600;
-const PRODUCT_BACKGROUND = "#f5f5f5";
-const PRODUCT_PADING = 100;
-
-const DESIGN_MODE = "BOUNDARY"; // BOUNDARY or FREEFORM
-const DESIGN_BOUNDARY = {
-  left: 0,
-  top: 0,
-  width: 300,
-  height: 450,
-};
-
-const OUTSIDE_OPACITY = 0.05;
-
-export default function Canvas() {
+export default function Canvas({ isActive = true, config, canvasWorkspaceRef }) {
   const dispatch = useDispatch();
-  const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const fabricRef = useRef(null);
   const calculatedBoundaryRef = useRef(null); //first set on initializeCanvas function
   const [canvasZoom, setCanvasZoom] = useState(null);
-  const [productMockupView, setProductMockupView] = useState("front");
 
   let originalWorkspaceWidth = null;
   let originalWorkspaceHeight = null;
 
+  useEffect(() => {
+    console.log("Canvas isActive:", isActive);
+  }, [isActive]);
   //redux
   // Redux state for canvas items
   const canvasItem = useSelector((state) => state.addCanvasItem.canvasItem);
   useEffect(() => {
-    if (!fabricRef.current) return;
+    if (!fabricRef.current || !isActive) return;
     if (canvasItem.type === "shape") {
       // Add shape to canvas
     } else if (canvasItem.type === "image") {
       // Add image to canvas
-      addImage(fabricRef.current, canvasItem.data.urlThumbnail, {boundary: calculatedBoundaryRef.current});
+      addImage(fabricRef.current, canvasItem.data.id, canvasItem.data.urlThumbnail, { boundary: calculatedBoundaryRef.current });
     } else if (canvasItem.type === "text") {
       // Add text to canvas
-      addText(fabricRef.current, canvasItem.data.text, {boundary: calculatedBoundaryRef.current});
+      addText(fabricRef.current, canvasItem.data.id, canvasItem.data.text, { boundary: calculatedBoundaryRef.current });
     } else if (canvasItem.type === "template") {
       // Add template to canvas
     } else if (canvasItem.type === "clipart") {
@@ -57,7 +42,7 @@ export default function Canvas() {
   // Redux state for object alignment
   const objectAligment = useSelector((state) => state.objectAligment.alignment);
   useEffect(() => {
-    if (!fabricRef.current) return;
+    if (!fabricRef.current || !isActive) return;
     if (objectAligment) {
       alignmentSelectedObject(fabricRef.current, calculatedBoundaryRef.current, objectAligment);
       dispatch(alignment(null)); // Reset alignment after applying it
@@ -65,22 +50,22 @@ export default function Canvas() {
   }, [objectAligment]);
 
 
-    // Redux state for object transform
-  const objectTransform  = useSelector((state) => state.objectTransform);
+  // Redux state for object transform
+  const propertiesValue = useSelector((state) => state.propertiesValue);
   useEffect(() => {
-    if (!fabricRef.current) return;
-    if (objectTransform && objectTransform.renderObject) {
-      transformSelectedObject(fabricRef.current, objectTransform);
+    if (!fabricRef.current || !isActive) return;
+    if (propertiesValue && propertiesValue.renderObject) {
+      transformSelectedObject(fabricRef.current, propertiesValue);
     }
-  }, [objectTransform]);
+  }, [propertiesValue]);
 
 
   useEffect(() => {
     // belum fix
     const resizeObserver = new ResizeObserver(() => {
-      resizeCanvas(fabricRef, containerRef, originalWorkspaceHeight, originalWorkspaceWidth);
+      resizeCanvas(fabricRef, canvasWorkspaceRef, originalWorkspaceHeight, originalWorkspaceWidth);
     });
-    resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(canvasWorkspaceRef.current);
     return () => {
       resizeObserver?.disconnect();
     };
@@ -88,25 +73,25 @@ export default function Canvas() {
 
 
   useEffect(() => {
-    if (containerRef.current === null) return;
+    if (canvasWorkspaceRef.current === null) return;
     let cleanCanvasEventHandlers;
     const setup = async () => {
-      const cleanup = await initializeCanvas(containerRef, fabricRef, canvasRef, calculatedBoundaryRef, {
-        height: PRODUCT_HEIGHT,
-        width: PRODUCT_WIDTH,
-        mockupBackgroundColor: PRODUCT_BACKGROUND,
-        mockupUrl: "http://localhost:8877/api/storage/preview/images/product/tshirtfront.png",
-        mockupBackgroundPadding: PRODUCT_PADING,
-        designMode: DESIGN_MODE,
-        outsideOpacity: OUTSIDE_OPACITY,
-        boundary: DESIGN_BOUNDARY
+      const cleanup = await initializeCanvas(canvasWorkspaceRef, fabricRef, canvasRef, calculatedBoundaryRef, {
+        height: config.height,
+        width: config.width,
+        mockupBackgroundColor: config.mockupBackgroundColor,
+        mockupUrl: config.mockupUrl,
+        mockupBackgroundPadding: config.mockupBackgroundPadding,
+        designMode: config.designMode,
+        outsideOpacity: config.outsideOpacity,
+        boundary: config.boundary
       }, dispatch);
       cleanCanvasEventHandlers = cleanup?.cleanCanvasEventHandlers;
     };
     setup();
-    originalWorkspaceHeight = containerRef.current.clientHeight;
-    originalWorkspaceWidth = containerRef.current.clientWidth;
-    resizeCanvas(fabricRef, containerRef, originalWorkspaceHeight, originalWorkspaceWidth);
+    originalWorkspaceHeight = canvasWorkspaceRef.current.clientHeight;
+    originalWorkspaceWidth = canvasWorkspaceRef.current.clientWidth;
+    resizeCanvas(fabricRef, canvasWorkspaceRef, originalWorkspaceHeight, originalWorkspaceWidth);
     setCanvasZoom(fabricRef.current);
     return () => {
       cleanCanvasEventHandlers?.();
@@ -116,21 +101,16 @@ export default function Canvas() {
         canvas.dispose();
       }
     };
-  }, [PRODUCT_WIDTH, PRODUCT_HEIGHT]);
+  }, []);
 
 
   return (
     <>
-      <div className="canvas-workspace" ref={containerRef}>
-          
+      <div hidden={!isActive} style={{ display: "flex", justifyContent: "center" }}>
         <canvas ref={canvasRef} />
-      </div>
-      <MockupSwitcher
-          activeView={productMockupView}
-          onChange={(view)=>{setProductMockupView(view)}}
-        />
-      <div className="canvas-editor-bottom-dock ">
-        {canvasZoom && <ZoomControl canvas={canvasZoom} />}
+        <div className="canvas-editor-bottom-dock ">
+          {canvasZoom && <ZoomControl canvas={canvasZoom} />}
+        </div>
       </div>
     </>
   );

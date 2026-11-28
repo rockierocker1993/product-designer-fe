@@ -6,17 +6,18 @@ import {
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { alignment } from "../../../store/ObjectAlignment";
-import { setRotate, setSkewX, setSkewY, setFlipX, setFlipY, setWidth, setHeight } from "../../../store/ObjectTransform";
+import { setRotate, setSkewX, setSkewY, setFlipX, setFlipY, setWidth, setHeight, setOpacity } from "../../../store/PropertiesValue";
 import {
     ALIGNMENT_LEFT, ALIGNMENT_CENTER,
     ALIGNMENT_RIGHT, ALIGNMENT_TOP,
     ALIGNMENT_MIDDLE, ALIGNMENT_BOTTOM
 } from "../../../constant.jsx";
+import InputRange from "../../../components/InputRange.jsx";
 
 const DefaultProperties = () => {
 
     const dispatch = useDispatch();
-    const objectTransform = useSelector((state) => state.objectTransform);
+    const propertiesValue = useSelector((state) => state.propertiesValue);
 
     const alignActions = [
         { alignment: ALIGNMENT_LEFT, label: "Align Left", glyph: "left", active: true },
@@ -54,52 +55,57 @@ const DefaultProperties = () => {
             <div className="grid-2">
                 <label className="field-label">
                     <span>Width</span>
-                    <input className="input remove-spinner-number" type="number" min="0" step="1" value={objectTransform.width} aria-label="Width" onChange={(e) => dispatch(setWidth({ data: parseInt(e.target.value), renderObject: true }))} />
+                    <input className="input remove-spinner-number" type="number" min="0" step="1" value={propertiesValue.width} aria-label="Width" onChange={(e) => dispatch(setWidth({ data: parseInt(e.target.value), renderObject: true }))} />
                 </label>
                 <label className="field-label">
                     <span>Height</span>
-                    <input className="input remove-spinner-number" type="number" min="0" step="1" value={objectTransform.height} aria-label="Height" onChange={(e) => dispatch(setHeight({ data: parseInt(e.target.value), renderObject: true }))} />
+                    <input className="input remove-spinner-number" type="number" min="0" step="1" value={propertiesValue.height} aria-label="Height" onChange={(e) => dispatch(setHeight({ data: parseInt(e.target.value), renderObject: true }))} />
                 </label>
             </div>
             <div className="btn-row" role="group" aria-label="Transform actions">
-                <button className={`chip-btn ${objectTransform.flipX ? "is-active" : ""}`.trim()} type="button" title="Flip X" onClick={() => dispatch(setFlipX({ data: !objectTransform.flipX, renderObject: true }))}>
+                <button className={`chip-btn ${propertiesValue.flipX ? "is-active" : ""}`.trim()} type="button" title="Flip X" onClick={() => dispatch(setFlipX({ data: !propertiesValue.flipX, renderObject: true }))}>
                     <FlipHorizontal size={13} />
                     <span>Flip X</span>
                 </button>
-                <button className={`chip-btn ${objectTransform.flipY ? "is-active" : ""}`.trim()} type="button" title="Flip Y" onClick={() => dispatch(setFlipY({ data: !objectTransform.flipY, renderObject: true }))}>
+                <button className={`chip-btn ${propertiesValue.flipY ? "is-active" : ""}`.trim()} type="button" title="Flip Y" onClick={() => dispatch(setFlipY({ data: !propertiesValue.flipY, renderObject: true }))}>
                     <FlipVertical size={13} />
                     <span>Flip Y</span>
                 </button>
             </div>
-            <div>
-                <div className="input-range-header">
-                    <span>Rotate</span>
-                    <strong>{objectTransform.rotate}&deg;</strong>
-                </div>
-                <input className="input-range" type="range" min="0" max="360" value={objectTransform.rotate} onChange={(e) => dispatch(setRotate({ data: parseInt(e.target.value), renderObject: true }))} />
-            </div>
-            <div>
-                <div className="input-range-header">
-                    <span>Skew X</span>
-                    <strong>{objectTransform.skewX}&deg;</strong>
-                </div>
-                <input className="input-range" type="range" min="-45" max="45" value={objectTransform.skewX} onChange={(e) => dispatch(setSkewX({ data: parseInt(e.target.value), renderObject: true }))} />
-            </div>
-            <div>
-                <div className="input-range-header">
-                    <span>Skew Y</span>
-                    <strong>{objectTransform.skewY}&deg;</strong>
-                </div>
-                <input className="input-range" type="range" min="-45" max="45" value={objectTransform.skewY} onChange={(e) => dispatch(setSkewY({ data: parseInt(e.target.value), renderObject: true }))} />
-            </div>
+            <InputRange
+                min={0}
+                max={360}
+                value={propertiesValue.rotate}
+                onChange={(e) => dispatch(setRotate({ data: parseInt(e.target.value), renderObject: true }))}
+                label="Rotate"
+                numberFormat="degrees"
+            />
+            <InputRange
+                min={-45}
+                max={45}
+                value={propertiesValue.skewX}
+                onChange={(e) => dispatch(setSkewX({ data: parseInt(e.target.value), renderObject: true }))}
+                label="Skew X"
+                numberFormat="degrees"
+            />
+            <InputRange
+                min={-45}
+                max={45}
+                value={propertiesValue.skewY}
+                onChange={(e) => dispatch(setSkewY({ data: parseInt(e.target.value), renderObject: true }))}
+                label="Skew Y"
+                numberFormat="degrees"
+            />
             <div className="horizontal-line mt-2"></div>
             <h4 className="section-title mb-1 mt-2">Opacity</h4>
-            <div>
-                <div className="input-range-header">
-                    <strong>100%</strong>
-                </div>
-                <input className="input-range" type="range" min="0" max="100" defaultValue="100" />
-            </div>
+            <InputRange
+                min={0}
+                max={100}
+                value={propertiesValue.opacity}
+                onChange={(e) => dispatch(setOpacity({ data: parseInt(e.target.value), renderObject: true }))}
+                label="Opacity"
+                numberFormat="percentage"
+            />
         </>
     );
 };

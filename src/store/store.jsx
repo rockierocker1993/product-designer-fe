@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import addCanvasItemReducer from './CanvasAddItem';
-import objectTransformReducer from './ObjectTransform';
+import propertiesValueReducer from './PropertiesValue';
 import objectAligmentReducer from './ObjectAlignment';
 
 
 const store = configureStore({
   reducer: {
     addCanvasItem: addCanvasItemReducer,
-    objectTransform: objectTransformReducer,
+    propertiesValue: propertiesValueReducer,
     objectAligment: objectAligmentReducer,
   },
 });

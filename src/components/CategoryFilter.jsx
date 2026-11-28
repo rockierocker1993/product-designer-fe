@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
     getCategory,
-} from "../api/designDataToolsApi";
+} from "../api/categoryApi";
 
 export const CategoryFilter = ({
     selectedCategory,
     categoryName,
     handleCategoryChange,
+    categoryItems = [],
+    setCategoryItems
 }) => {
     const [showCategoryScrollButtons, setShowCategoryScrollButtons] = useState(false);
     const tabListRef = useRef(null);
-    const [categoryItems, setCategoryItems] = useState([]);
     // Fetch categories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -75,24 +76,24 @@ export const CategoryFilter = ({
             <div ref={tabListRef} className="sidebar-tabs">
                 <button
                     type="button"
-                    className={`sidebar-tab-btn ${selectedCategory === "" ? "active" : ""}`}
-                    onClick={() => handleCategoryChange("")}
-                    aria-pressed={selectedCategory === ""}
+                    className={`sidebar-tab-btn ${selectedCategory.category === "" ? "active" : ""}`}
+                    onClick={() => handleCategoryChange({ category: "" })}
+                    aria-pressed={selectedCategory.category === ""}
                 >
                     All
                 </button>
 
                 {categoryItems.map((category) => (
                     <button
-                        key={category}
+                        key={category.category}
                         type="button"
-                        className={`sidebar-tab-btn ${selectedCategory === category ? "active" : ""
+                        className={`sidebar-tab-btn ${selectedCategory.category === category.category ? "active" : ""
                             }`}
                         onClick={() => handleCategoryChange(category)}
-                        aria-pressed={selectedCategory === category}
-                        title={`Filter ${category}`}
+                        aria-pressed={selectedCategory.category === category.category}
+                        title={`Filter ${category.category}`}
                     >
-                        {category}
+                        {category.category}
                     </button>
                 ))}
             </div>

@@ -1,6 +1,11 @@
 import { fabric } from "fabric";
 
-export const addImage = (canvas, url, options = {}) => {
+export const addImage = (
+    canvas, 
+    id = "generated-" + crypto.randomUUID(), 
+    url, 
+    options = {}
+) => {
     return new Promise((resolve, reject) => {
         if (!canvas || !url) {
             reject(new Error("Canvas and image URL are required"));
@@ -16,6 +21,7 @@ export const addImage = (canvas, url, options = {}) => {
                 const { scale } = calculateSizeItem(canvas, options, img.width, img.height);
                 const { left, top } = getMiddleCenterBoundary(img.width, img.height, options.boundary);
                 img.set({
+                    id: id,
                     left: left,
                     top: top,
                     originX: "center",
@@ -43,6 +49,7 @@ export const addImage = (canvas, url, options = {}) => {
 
 export const addText = async (
     canvas,
+    id = "generated-" + crypto.randomUUID(),
     textValue = "Your Design",
     options = {}
 ) => {
@@ -54,6 +61,7 @@ export const addText = async (
     await document.fonts.load(`${options.fontWeight ?? "normal"} ${fontSize}px "${fontFamily}"`);
     const { left, top } = getMiddleCenterBoundary(100, 30, options.boundary);
     const text = new fabric.IText(textValue, {
+        id: id,
         left: left,
         top: top,
         originX: "center",

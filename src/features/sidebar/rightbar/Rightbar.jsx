@@ -1,57 +1,64 @@
-import { useEffect, useState } from "react";
-import RightbarContainer from "./RightbarContainer";
+import { useEffect, useState, useRef, useCallback } from "react";
 import TextProperties from "./TextProperties";
 import "../../../assets/css/rightbar.css"
-import {
-	FlipHorizontal,
-	FlipVertical,
-	RotateCw,
-	Menu
-} from "lucide-react";
-import DefaultProperties from "./DefaultProperties";
+import { PropertiesAnimationSkeleton } from "../../../components/SkeletonAnimation";
+import { MoveLeft } from "lucide-react";
+import Properties from "./Properties";
+import FontPicker from "./FontPicker";
+import { fetchFonts } from "./controll/righbarControll";
 
 const Rightbar = () => {
-    const alignActions = [
-        { id: "align-left", label: "Align Left", glyph: "left", active: true },
-        { id: "align-center", label: "Align Center", glyph: "center" },
-        { id: "align-right", label: "Align Right", glyph: "right" },
-        { id: "align-top", label: "Align Top", glyph: "top" },
-        { id: "align-middle", label: "Align Middle", glyph: "middle" },
-        { id: "align-bottom", label: "Align Bottom", glyph: "bottom" },
-        { id: "align-more", label: "More Align Options", glyph: "menu" },
-    ];
-    const ObjectAlignIcon = ({ type }) => {
-        if (type === "menu") {
-            return <Menu size={12} strokeWidth={2.1} />;
-        }
+    const FONT_PAGE_SIZE = 30;
+    const [pageFont, setPageFont] = useState(1);
+    const [searchTermFont, setSearchTermFont] = useState("");
+    const [selectedCategoryFont, setSelectedCategoryFont] = useState("");
 
-        return (
-            <span className={`rp-object-align-icon ${type}`} aria-hidden="true">
-                <span className="rp-object-align-ref" />
-                <span className="rp-object-align-shape" />
-            </span>
+    const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState("Text Properties");
+    const [subtitle, setSubtitle] = useState("Control your selected text style");
+    const [rightbarContent, setRightbarContent] = useState(null);
+
+    const showFontPicker = async () => {
+        setLoading(true);
+        setTitle(
+            <button className='icon-btn' onClick={showProperties}>
+                <MoveLeft size={24} />
+            </button>
         );
-    };
+        setLoading(false);    
+        setSubtitle(<h4 className="section-title">Font</h4>);
+        setRightbarContent(<FontPicker/>);
+    }
 
-    const textTransformActions = [
-        { id: "flip-x", label: "Flip X", icon: FlipHorizontal },
-        { id: "flip-y", label: "Flip Y", icon: FlipVertical },
-        { id: "rotate", label: "Rotate", icon: RotateCw },
-    ];
-
-
-    const [children, setChildren] = useState(null);
     useEffect(() => {
-        setChildren(<TextProperties />);
+        showFontPicker();
+    }, [pageFont, searchTermFont, selectedCategoryFont]);
+
+
+    const showProperties = () => {
+        setTitle(<h3>Text Properties</h3>);
+        setSubtitle(<p className="section-title">Control your selected text style</p>);
+        setRightbarContent(<Properties showFontPicker={showFontPicker} />);
+        setLoading(false);
+    };
+    useEffect(() => {
+        setRightbarContent(<Properties showFontPicker={showFontPicker} />);
+        setTitle(<h3>Text Properties</h3>);
+        setSubtitle("Control your selected text style");
+        setLoading(false);
     }, []);
+
     return (
-        <RightbarContainer title="Text Properties" subtitle="Control your selected text style">
-            <div className="section-body">
-                <DefaultProperties/>
-                <div className="horizontal-line mt-2"></div>
-                {children ? children : <></>}
-            </div>
-        </RightbarContainer>
+        <aside className="rightbar-container" aria-label="Editor right sidebar">
+            {loading && (
+                <PropertiesAnimationSkeleton />
+            )}
+            <header className="rightbar-container-header">
+                {title ? title : null}
+                {subtitle ? subtitle : null}
+            </header>
+            {!loading && rightbarContent}
+        </aside>
     );
 };
 

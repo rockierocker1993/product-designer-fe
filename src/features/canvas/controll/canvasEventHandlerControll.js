@@ -1,4 +1,9 @@
-import { setFlipX, setFlipY, setRotate, setSkewX, setSkewY, setWidth, setHeight } from "../../../store/ObjectTransform";
+import {
+    setId, setType, setRotate, setSkewX, setSkewY, setFlipX, setFlipY,
+    setWidth, setHeight, setOpacity, setTextColor, setStroke, 
+    setStrokeWidth, setLeft, setTop, setOriginX, setOriginY, 
+    setFontFamily, setFontSize, setFontWeight, setFontStyle, setTextAlign
+} from "../../../store/PropertiesValue";
 export const createCanvasEventHandlers = (canvas, maskImage, config, dispatch) => {
 
     const handleObjectAdded = (event) => {
@@ -46,7 +51,8 @@ const onObjectAdded = (canvas, event, maskImage, config) => {
 
 const onObjectSelected = (object, dispatch) => {
     if (!object) return;
-
+    const activeId = object.id;
+    const activeType = object.type;
     const activeRotate = parseInt(object.angle) || 0;
     const activeSkewY = object.skewY || 0;
     const activeSkewX = object.skewX || 0;
@@ -54,6 +60,25 @@ const onObjectSelected = (object, dispatch) => {
     const activeFlipX = object.flipX || false;
     const activeWidth = object.getScaledWidth() || 0;
     const activeHeight = object.getScaledHeight() || 0;
+    const activeOpacity = object.opacity || 1;
+    const activeLeft = object.left || 0;
+    const activeTop = object.top || 0;
+    const activeOriginX = object.originX;
+    const activeOriginY = object.originY;
+    const activeFontFamily = object.fontFamily;
+    const activeFontSize = object.fontSize;
+    const activeFontWeight = object.fontWeight;
+    const activeFontStyle = object.fontStyle;
+    const activeTextAlign = object.textAlign;
+    const activeTextColor = object.fill;
+    const activeStroke = object.stroke;
+    const activeStrokeWidth = object.strokeWidth;
+    console.log("Active color:", activeTextColor);
+    dispatch(setId({ data: activeId, renderObject: false }));
+    dispatch(setType({ data: activeType, renderObject: false }));
+    dispatch(setTextColor({ data: activeTextColor, renderObject: false }));
+    dispatch(setStroke({ data: activeStroke, renderObject: false }));
+    dispatch(setStrokeWidth({ data: activeStrokeWidth, renderObject: false }));
     dispatch(setRotate({ data: activeRotate, renderObject: false }));
     dispatch(setSkewY({ data: activeSkewY, renderObject: false }));
     dispatch(setSkewX({ data: activeSkewX, renderObject: false }));
@@ -61,6 +86,16 @@ const onObjectSelected = (object, dispatch) => {
     dispatch(setFlipX({ data: activeFlipX, renderObject: false }));
     dispatch(setWidth({ data: Math.trunc(activeWidth), renderObject: false }));
     dispatch(setHeight({ data: Math.trunc(activeHeight), renderObject: false }));
+    dispatch(setOpacity({ data: activeOpacity * 100, renderObject: false }));
+    dispatch(setLeft({ data: activeLeft, renderObject: false }));
+    dispatch(setTop({ data: activeTop, renderObject: false }));
+    dispatch(setOriginX({ data: activeOriginX, renderObject: false }));
+    dispatch(setOriginY({ data: activeOriginY, renderObject: false }));
+    dispatch(setFontFamily({ data: activeFontFamily, renderObject: false }));
+    dispatch(setFontSize({ data: activeFontSize, renderObject: false }));
+    dispatch(setFontWeight({ data: activeFontWeight, renderObject: false }));
+    dispatch(setFontStyle({ data: activeFontStyle, renderObject: false }));
+    dispatch(setTextAlign({ data: activeTextAlign, renderObject: false }));
 };
 
 export const cleanCanvasEventHandlers = (canvas) => {

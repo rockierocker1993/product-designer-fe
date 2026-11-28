@@ -1,29 +1,18 @@
-import React, { useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
 	Bold,
 	Italic,
 	Underline,
 	Strikethrough,
-	FlipHorizontal,
-	FlipVertical,
-	RotateCw,
 	Sparkles,
 	Waves,
-	RefreshCcw,
-	Check,
-	Menu,
 	SlidersHorizontal,
-	Type,
-	ChevronDown,
-	ChevronUp,
 } from "lucide-react";
 import CollapsibleSection from "../../../components/CollapsibleSection";
-
-const textTransformActions = [
-	{ id: "flip-x", label: "Flip X", icon: FlipHorizontal },
-	{ id: "flip-y", label: "Flip Y", icon: FlipVertical },
-	{ id: "rotate", label: "Rotate", icon: RotateCw },
-];
+import InputRange from "../../../components/InputRange";
+import ColorPicker from "../../../components/ColortPicker";
+import { setTextColor, setStroke, setStrokeWidth, setFontSize } from "../../../store/PropertiesValue";
+import { useDispatch, useSelector } from "react-redux";
 
 const effectActions = [
 	{ id: "arc", label: "Arc", icon: Sparkles },
@@ -39,107 +28,43 @@ const textShadow = [
 	{ id: "wave", label: "Fading color cut", icon: Waves },
 ];
 
-const decorationActions = [
-	{ id: "none", label: "None", icon: Type },
-	{ id: "underline", label: "Underline", icon: Underline },
-	{ id: "strike", label: "Strike", icon: Strikethrough },
-];
-
-const alignActions = [
-	{ id: "align-left", label: "Align Left", glyph: "left", active: true },
-	{ id: "align-center", label: "Align Center", glyph: "center" },
-	{ id: "align-right", label: "Align Right", glyph: "right" },
-	{ id: "align-top", label: "Align Top", glyph: "top" },
-	{ id: "align-middle", label: "Align Middle", glyph: "middle" },
-	{ id: "align-bottom", label: "Align Bottom", glyph: "bottom" },
-	{ id: "align-more", label: "More Align Options", glyph: "menu" },
-];
-
-const ObjectAlignIcon = ({ type }) => {
-	if (type === "menu") {
-		return <Menu size={12} strokeWidth={2.1} />;
-	}
-
-	return (
-		<span className={`rp-object-align-icon ${type}`} aria-hidden="true">
-			<span className="rp-object-align-ref" />
-			<span className="rp-object-align-shape" />
-		</span>
-	);
-};
-
-
-const TextProperties = () => {
+const TextProperties = ({ showFontPicker }) => {
+	const dispatch = useDispatch();
+	const propertiesValue = useSelector((state) => state.propertiesValue);
 	return (
 		<>
 			<h4 className="section-title mb-1 mt-2">Text Color</h4>
-			<div className="color-row">
-				<input
-					className="input-color-picker"
-					type="color"
-					defaultValue="#FFFFFF"
-					aria-label="Text color"
-				/>
-				<span className="badge-percentage">#FFFFFF</span>
-				<div className="input-percentage">
-					<input
-						type="number"
-						min="1"
-						max="100"
-						step="1"
-					/>
-					<span className="percentage-suffix">%</span>
-				</div>
-			</div>
+			<ColorPicker
+				colorHex={propertiesValue.textColor}
+				onChange={(colorHex) => dispatch(setTextColor({ data: colorHex, renderObject: true }))}
+			/>
 			<button className="outline-btn" type="button">
 				Browse Color Palettes
 			</button>
 			<CollapsibleSection title="Border">
-				<div className="color-row">
-					<input
-						className="input-color-picker"
-						type="color"
-						defaultValue="#FFFFFF"
-						aria-label="Text color"
-					/>
-					<span className="badge-percentage">#FFFFFF</span>
-					<div className="input-percentage">
-						<input
-							type="number"
-							min="1"
-							max="100"
-							step="1"
-						/>
-						<span className="percentage-suffix">%</span>
-					</div>
-				</div>
-				<div className="mt-0">
-					<div className="input-range-header">
-						<span>Border Weight</span>
-						<strong>5.00</strong>
-					</div>
-					<input className="input-range" type="range" min="0" max="100" defaultValue="100" />
-				</div>
+				<ColorPicker
+					colorHex={propertiesValue.stroke}
+					onChange={(colorHex) => {console.log("onchange"); dispatch(setStroke({ data: colorHex, renderObject: true }))}}
+				/>
+				<InputRange
+					min={0}
+					max={500}
+					value={propertiesValue.strokeWidth}
+					onChange={(e) => dispatch(setStrokeWidth({ data: Number(e.target.value), renderObject: true }))}
+					label="Border Weight"
+					numberFormat="number"
+				/>
 			</CollapsibleSection>
 
 			<CollapsibleSection title="Text Style">
 				<label className="field-label">
 					<span>Font Family</span>
-					<select className="input" aria-label="Font family" defaultValue="Bungee">
-						<option value="Bungee">Bungee</option>
-						<option value="Montserrat">Montserrat</option>
-						<option value="Oswald">Oswald</option>
-					</select>
-					<select className="input" aria-label="Font family" defaultValue="Bungee">
-						<option value="Bungee">Regular</option>
-						<option value="Montserrat">Medium</option>
-						<option value="Oswald">Bold</option>
-					</select>
+					<button className="outline-btn" type="button" onClick={showFontPicker}>Browse Fonts</button>
 				</label>
 				<div className="grid-3">
 					<label className="field-label">
 						<span>Font size</span>
-						<input className="input" defaultValue="238" aria-label="Font size" />
+						<input className="input" value={propertiesValue.fontSize} onChange={(e) => dispatch(setFontSize({ data: Number(e.target.value), renderObject: true }))} aria-label="Font size" />
 					</label>
 					<label className="field-label">
 						<span>Letter spacing</span>

@@ -82,7 +82,7 @@ export const ImageUpload = ({ onSuccess, onFailed, onProgress, onUpload }) => {
         if (onSuccess) onSuccess(id, response);
     };
     return (
-        <div className="sidebar-wrapper">
+        <div>
             <button className="chip-btn width-full content-left" type="button" onClick={handleChooseFile}>
                 <Upload size={14} />
                 Upload

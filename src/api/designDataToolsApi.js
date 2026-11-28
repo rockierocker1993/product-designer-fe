@@ -110,18 +110,3 @@ export const uploadImage = async (payload) => {
         mapData: ImageModel.from,
     });
 };
-
-/**
- * Get category data
- * @param {string} type - Type of category (e.g., 'clipart', 'image')
- * @returns {Promise<import('./model/baseResponse').BaseResponse<any>>} Base response containing category data
- */
-export const getCategory = async (type) => {
-    const response = await apiRequest(
-        buildUrl(`category/${type}`),
-    );
-    return toResponse(response, {
-        fallbackData: [],
-        mapData: (data) => data, // No mapping needed for category
-    });
-};

@@ -38,6 +38,11 @@
     overflow: hidden;
 }
 
+.properties-skeleton {
+    width: 100%;
+    overflow: hidden;
+}
+
 .image-card-skeleton {
     width: 100%;
     overflow: hidden;

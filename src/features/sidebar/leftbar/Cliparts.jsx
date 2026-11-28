@@ -1,20 +1,15 @@
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Search,
+  Plus
 } from "lucide-react";
 import { addClipartItem } from "../../../store/components/AddCanvasItemSlice";
 import {
   searchCliparts,
-  getCategory,
 } from "../../../api/designDataToolsApi";
 
 import { LeftbarPanelShell } from "../";
-import { useLoadableData } from "../../../hooks";
 import { CardPreviewAnimationSkeleton } from "../../../components/SkeletonAnimation";
 
 const PAGE_SIZE = 30;
@@ -79,7 +74,7 @@ const Cliparts = () => {
         setClipartItems(items);
         console.log("Fetched clipart items:", items);
         const moreAvailable = items.length >= PAGE_SIZE;
-
+        
         pageRef.current = 1;
         hasMoreRef.current = moreAvailable;
         setHasMore(moreAvailable);
