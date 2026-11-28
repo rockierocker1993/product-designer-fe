@@ -221,7 +221,7 @@ const Product = () => {
                   >
                     <div className="sidebar-card-preview">
                       {product.urlThumbnail ? (
-                        <img src={product.urlThumbnail} alt={product.name} className="product-preview" />
+                        <img src={product.urlThumbnail} alt={product.name} />
                       ) : (
                         <div className="item-placeholder">
                           <svg
@@ -259,7 +259,7 @@ const Product = () => {
               {hasMore && (
                 <div
                   ref={loadMoreRef}
-                  className="sidebar-load-more-trigger"
+                  className="load-more-trigger"
                 />
               )}
             </>
@@ -268,7 +268,7 @@ const Product = () => {
             <CardPreviewAnimationSkeleton count={SKELETON_ANIMATION_SIZE} />
           )}
           {loadMoreError && (
-            <div className="sidebar-load-more-error">
+            <div className="load-more-error">
               <span>Failed to load more products.</span>
               <button type="button" onClick={loadMore}>
                 Retry

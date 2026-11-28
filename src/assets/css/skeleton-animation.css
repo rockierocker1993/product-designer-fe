@@ -1,4 +1,4 @@
-
+/* Skeleton placeholders and their shimmer animation. */
 .skeleton {
     position: relative;
     overflow: hidden;
@@ -33,12 +33,8 @@
     }
 }
 
-.product-card-skeleton {
-    width: 100%;
-    overflow: hidden;
-}
-
-.properties-skeleton {
+/* Shared container for full-width skeleton groups. */
+.skeleton-group {
     width: 100%;
     overflow: hidden;
 }
@@ -66,5 +62,5 @@
 .profile-skeleton-info {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 }

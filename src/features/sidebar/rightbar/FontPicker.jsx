@@ -62,7 +62,7 @@ const FontPicker = ({ onSelect }) => {
                         {hasMore && (
                             <div
                                 ref={loadMoreRef}
-                                className="sidebar-load-more-trigger"
+                                className="load-more-trigger"
                             />
                         )}
                     </>
@@ -75,7 +75,7 @@ const FontPicker = ({ onSelect }) => {
                 )}
 
                 {error && !fonts.length && (
-                    <div className="sidebar-load-more-error">
+                    <div className="load-more-error">
                         <span>Failed to load fonts.</span>
                         <button
                             type="button"
@@ -87,7 +87,7 @@ const FontPicker = ({ onSelect }) => {
                 )}
 
                 {loadMoreError && (
-                    <div className="sidebar-load-more-error">
+                    <div className="load-more-error">
                         <span>Failed to load more fonts.</span>
                         <button
                             type="button"

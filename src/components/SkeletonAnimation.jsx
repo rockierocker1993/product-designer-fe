@@ -18,14 +18,14 @@ export const Skeleton = ({
                 borderRadius: circle ? "50%" : radius
             }}
         >
-            {text && <span className="skeleton-text">{text}</span>}
+            {text && <span>{text}</span>}
         </div>
     );
 };
 
 export const ProductCardSkeleton = () => {
     return (
-        <div className="product-card-skeleton">
+        <div className="skeleton-group">
             <Skeleton width="100%" height={180} radius={10} />
 
             <div className="skeleton-content">
@@ -63,7 +63,7 @@ export const UploadImageSkeleton = ({ id, imagePreview }) => {
                         <Skeleton width="75%" height={12} className="image-skeleton" />
                     </div>
                 </div>
-                <img style={{ opacity: 0.4 }} id={id} src={imagePreview} alt="" className="image-preview" />
+                <img style={{ opacity: 0.4 }} id={id} src={imagePreview} alt="" />
             </div>
         </div>
     );
@@ -93,7 +93,7 @@ export const CardPreviewAnimationSkeleton = ({ count, className }) => {
 
 export const PropertiesAnimationSkeleton = () => {
     return (
-        <div className="properties-skeleton">
+        <div className="skeleton-group">
             <Skeleton width="100%" height={60} radius={10} className="mb-3 mt-3"/>
             <div className="skeleton-content">
                 <Skeleton width="100%" height={20} className="mb-1"/>

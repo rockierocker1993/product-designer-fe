@@ -44,7 +44,7 @@ const PanelShell = ({
 
   // Category filters
   return (
-    <div className="col column sidebar-container">
+    <div className="col sidebar-container">
       <div className="sidebar-content">
         <div className="section-body">
           <div className="section">

@@ -261,7 +261,7 @@ const Images = () => {
                   >
                     <div className="sidebar-card-preview">
                       {image.urlThumbnail ? (
-                        <img src={image.urlThumbnail} alt={image.name} className="image-preview" />
+                        <img src={image.urlThumbnail} alt={image.name} />
                       ) : (
                         <div className="item-placeholder">
                           <svg
@@ -299,7 +299,7 @@ const Images = () => {
               {hasMore && (
                 <div
                   ref={loadMoreRef}
-                  className="sidebar-load-more-trigger"
+                  className="load-more-trigger"
                 />
               )}
             </>
@@ -308,7 +308,7 @@ const Images = () => {
             <CardPreviewAnimationSkeleton count={SKELETON_ANIMATION_SIZE} />
           )}
           {loadMoreError && (
-            <div className="sidebar-load-more-error">
+            <div className="load-more-error">
               <span>Failed to load more images.</span>
               <button type="button" onClick={loadMore}>
                 Retry

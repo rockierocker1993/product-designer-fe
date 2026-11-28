@@ -221,7 +221,7 @@ const Template = () => {
                   >
                     <div className="sidebar-card-preview">
                       {template.urlThumbnail ? (
-                        <img src={template.urlThumbnail} alt={template.name} className="image-preview" />
+                        <img src={template.urlThumbnail} alt={template.name} />
                       ) : (
                         <div className="item-placeholder">
                           <svg
@@ -259,7 +259,7 @@ const Template = () => {
               {hasMore && (
                 <div
                   ref={loadMoreRef}
-                  className="sidebar-load-more-trigger"
+                  className="load-more-trigger"
                 />
               )}
             </>
@@ -268,7 +268,7 @@ const Template = () => {
             <CardPreviewAnimationSkeleton count={SKELETON_ANIMATION_SIZE} />
           )}
           {loadMoreError && (
-            <div className="sidebar-load-more-error">
+            <div className="load-more-error">
               <span>Failed to load more templates.</span>
               <button type="button" onClick={loadMore}>
                 Retry

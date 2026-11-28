@@ -127,8 +127,12 @@ src/
 │       └── Sidebar/
 │           └── ShapesSlice.jsx
 │
-├── styles/                 # Global styles
-│   └── global.css         # Global CSS variables & utility classes
+├── styles/                 # Shared styles
+│   ├── global.css         # Ordered stylesheet imports
+│   ├── tokens.css         # Design tokens
+│   ├── base.css           # Global reset and typography
+│   ├── controls.css       # Shared controls
+│   └── layout.css         # Shared layouts and utilities
 │
 ├── App.jsx                 # Main App component
 ├── main.jsx               # Application entry point
@@ -147,13 +151,58 @@ src/
 
 ## Styling
 
-Shared design tokens and reusable controls live in `src/styles/global.css`;
-feature styles live in `src/assets/css/`. Use the `--font-size-*`,
-`--editor-*`, radius and shadow tokens instead of introducing new one-off
-values. The editor uses a dark surface palette independently of the page theme.
-General theme colors such as `--primary-color` are still configured through
-the `VITE_*` theme settings; adjust `--editor-accent` and its related tokens
-in `global.css` to change the editor's blue accent.
+The [global stylesheet](./src/styles/global.css) is the shared entry point,
+loaded after Bootstrap in `src/main.jsx`. Its imports are in cascade order:
+
+| File | Purpose |
+| --- | --- |
+| [tokens.css](./src/styles/tokens.css) | Theme colors, editor palette, font sizes, spacing, radii and shadows |
+| [base.css](./src/styles/base.css) | Global box sizing, body and scrollbars |
+| [controls.css](./src/styles/controls.css) | Shared inputs, buttons, badges and theme toggle |
+| [layout.css](./src/styles/layout.css) | Shared sections, grids, alignment and list states |
+| [button-custom.css](./src/assets/css/button-custom.css) | Toolbar, property and sidebar tab buttons |
+| [sidebar.css](./src/assets/css/sidebar.css) | Navigation, asset panels, cards and responsive sidebar |
+| [rightbar.css](./src/assets/css/rightbar.css) | Properties sidebar and alignment glyphs |
+| [canvas.css](./src/assets/css/canvas.css) | Canvas workspace, zoom and mockup switcher |
+| [collapsible-section.css](./src/assets/css/collapsible-section.css), [combobox.css](./src/assets/css/combobox.css), [font-picker.css](./src/assets/css/font-picker.css), [skeleton-animation.css](./src/assets/css/skeleton-animation.css) | Component-specific styles, imported by their components |
+| [App.css](./src/assets/css/App.css) | Application shell and font import |
+
+#### Class reference
+
+| Purpose | Existing classes |
+| --- | --- |
+| Buttons | `outline-btn`, `icon-btn`, `chip-btn`; `is-active` for selected icon/chip buttons |
+| Property buttons | `property-btn`; add `property-btn--tool` for a left-aligned icon and label |
+| Form fields | `field-label` with a direct child `span`, `input`, `input-color-picker`, `input-range`, `input-range-header` |
+| Search | `input-search`, `input-search-icon`, and a child `input` |
+| Percentage | `percentage-badge`; add `input-percentage` when it contains an input |
+| Layout | `section`, `section-title`, `section-body`, `grid-2`, `grid-3`, `btn-row`, `color-row`, `width-full` |
+| Lists | `load-more-trigger`, `load-more-error` |
+| Sidebar assets | `sidebar-showcase-content`, `sidebar-grid`, `sidebar-card-btn`, `sidebar-card-preview`, `sidebar-card-action` |
+| Loading | `skeleton`, `skeleton-group`, `skeleton-content` |
+
+For example, a shared property field can use:
+
+```jsx
+<label className="field-label">
+  <span>Width</span>
+  <input className="input" type="number" />
+</label>
+```
+
+For a new component, reuse a shared class when its behavior and appearance fit;
+otherwise create component-specific classes using lowercase kebab-case, such as
+`product-card` and `product-card-title`. Use `component--variant` for modifiers
+and `is-*` for new state classes; retain existing names when modifying legacy
+components. Keep related base, state and responsive rules together, and import
+component-specific styles from the component. Avoid generic new class names
+that collide with Bootstrap. Note that `chip-btn` flexes to fill its row and
+`content-left` also adds left padding.
+
+Prefer existing tokens over new one-off values. The editor palette is independent
+of the page theme: `--primary-color` and other application theme variables can
+be overridden by the `VITE_*` theme settings, while editor colors such as
+`--editor-accent` are defined in `tokens.css`.
 
 ## 📦 Available Scripts
 
@@ -333,7 +382,7 @@ All theme colors are defined in `.env` file and automatically loaded as CSS vari
 
 1. **Environment Variables** → Define colors in `.env`
 2. **Config Module** → Load via `src/config/index.js`
-3. **CSS Variables** → Applied to `:root` in `src/assets/css/index.css`
+3. **CSS Variables** → Defaults in `src/styles/tokens.css`, overridden by `src/utils/theme.js`
 4. **Components** → Use CSS variables via `var(--variable-name)`
 
 **Example:**

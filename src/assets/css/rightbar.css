@@ -1,3 +1,4 @@
+/* Properties sidebar layout */
 .rightbar-container {
     height: 100vh;
     min-height: 0;
@@ -59,6 +60,7 @@
     background: var(--editor-scrollbar);
 }
 
+/* Alignment glyphs */
 .rp-object-align-icon {
     width: 14px;
     height: 14px;

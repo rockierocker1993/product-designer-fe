@@ -38,7 +38,7 @@ const EditorPropertiesPanel = ({ canvas, tshirtColor, onTshirtColorChange }) => 
             </div>
           ))}
         </div>
-        <button className="property-outline-btn" type="button">
+        <button className="property-btn" type="button">
           Browse Color Palettes
         </button>
       </PropertiesBlock>
@@ -47,7 +47,7 @@ const EditorPropertiesPanel = ({ canvas, tshirtColor, onTshirtColorChange }) => 
         {toolActionItems.map((toolItem) => {
           const Icon = toolItem.icon;
           return (
-            <button key={toolItem.id} className="tool-property-btn" type="button">
+            <button key={toolItem.id} className="property-btn property-btn--tool" type="button">
               <Icon size={14} />
               {toolItem.label}
             </button>

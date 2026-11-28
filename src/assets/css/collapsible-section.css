@@ -1,4 +1,4 @@
-
+/* Collapsible section shell; title and body use shared section styles. */
 .collapsible-section {
     background: var(--editor-hover);
     border: 1px solid var(--editor-hover-strong);
@@ -6,20 +6,14 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 }
 
 .collapsible-section-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-}
-
-.collapsible-section-body {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 }
 
 .collapsible-section-body[hidden] {
@@ -49,13 +43,4 @@
 
 .collapsible-section.is-collapsed {
     gap: 0;
-}
-
-.collapsible-section-title {
-    margin: 0;
-    color: var(--editor-text);
-    font-size: var(--font-size-xxs);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
 }

@@ -1,3 +1,4 @@
+/* Navigation rail */
 .menu {
   width: 70px;
   min-width: 56px;
@@ -105,6 +106,7 @@
   width: 100%;
 }
 
+/* Sidebar panel and panel contents */
 .sidebar-panel {
   width: 296px;
   height: 100vh;
@@ -173,16 +175,6 @@
   overflow: hidden;
 }
 
-.menu-detail {
-  max-width: 100%;
-  min-width: 100%;
-  height: 100vh;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  padding: 0;
-}
-
 .sidebar-container {
   max-width: 100%;
   min-width: 100%;
@@ -203,37 +195,7 @@
   padding: 8px 8px 0;
 }
 
-.sidebar-search-input {
-  width: 100%;
-  height: 42px;
-  padding: 0 44px 0 14px;
-  border: 1px solid var(--editor-border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--editor-input);
-  color: var(--editor-text-strong);
-  font-size: var(--font-size-base);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.sidebar-search-input::placeholder {
-  color: var(--editor-text-muted);
-}
-
-.sidebar-search-input:focus {
-  outline: none;
-  border-color: var(--editor-accent);
-  box-shadow: 0 0 0 3px var(--editor-accent-soft);
-}
-
-.sidebar-search-icon {
-  position: absolute;
-  right: 20px;
-  top: 56%;
-  transform: translateY(-50%);
-  color: var(--editor-text-muted);
-  pointer-events: none;
-}
-
+/* Category tabs */
 .sidebar-tabs-scroll {
   width: 100%;
   display: flex;
@@ -280,6 +242,7 @@
   display: none;
 }
 
+/* Scrollable asset grid and cards */
 .sidebar-showcase-content {
   width: 100%;
   height: 0;
@@ -399,30 +362,7 @@
   transform: translateY(-1px);
 }
 
-.sidebar-load-more-trigger {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: 10px;
-}
-
-.sidebar-load-more-error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  color: var(--editor-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.sidebar-load-more-error button {
-  border: 0;
-  background: transparent;
-  color: var(--editor-accent);
-  font-weight: 600;
-  cursor: pointer;
-}
-
+/* Loading, empty and error states */
 .grid-message {
   grid-column: 1 / -1;
   display: flex;
@@ -439,10 +379,6 @@
   font-size: var(--font-size-base);
 }
 
-.grid-message.error {
-  color: var(--error-color);
-}
-
 .spinner {
   width: 40px;
   height: 40px;
@@ -454,18 +390,6 @@
 
 @keyframes sidebar-spin {
   to { transform: rotate(360deg); }
-}
-
-.retry-btn {
-  margin-top: 12px;
-  padding: 10px 20px;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--error-color);
-  color: var(--text-light);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .sidebar-footer {
@@ -485,6 +409,7 @@
   border-radius: var(--radius-lg);
 }
 
+/* Responsive sidebar */
 @media (max-width: 980px) {
   .sidebar-panel { width: 260px; }
 }

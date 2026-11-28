@@ -273,7 +273,7 @@ const Shape = () => {
               {hasMore && (
                 <div
                   ref={loadMoreRef}
-                  className="sidebar-load-more-trigger"
+                  className="load-more-trigger"
                 />
               )}
             </>
@@ -282,7 +282,7 @@ const Shape = () => {
             <CardPreviewAnimationSkeleton count={SKELETON_ANIMATION_SIZE} />
           )}
           {loadMoreError && (
-            <div className="sidebar-load-more-error">
+            <div className="load-more-error">
               <span>Failed to load more shapes.</span>
               <button type="button" onClick={loadMore}>
                 Retry

@@ -108,7 +108,7 @@ const Leftbar = () => {
             
             {showPanel && (
                 <div 
-                    className={`sidebar-panel ${isPanelPinned ? 'pinned' : 'hover'}`}
+                    className={`sidebar-panel${isPanelPinned ? '' : ' hover'}`}
                     onMouseEnter={() => !isPanelPinned && setHoveredMenu(displayedMenu)}
                     onMouseLeave={handleMenuLeave}
                 >

@@ -65,7 +65,7 @@ export const CategoryFilter = ({
             {showCategoryScrollButtons && (
                 <button
                     type="button"
-                    className="sidebar-tab-arrow sidebar-tab-arrow-left"
+                    className="sidebar-tab-arrow"
                     onClick={() => scrollCategoryTabs(-1)}
                     aria-label="Scroll categories left"
                 >
@@ -101,7 +101,7 @@ export const CategoryFilter = ({
             {showCategoryScrollButtons && (
                 <button
                     type="button"
-                    className="sidebar-tab-arrow sidebar-tab-arrow-right"
+                    className="sidebar-tab-arrow"
                     onClick={() => scrollCategoryTabs(1)}
                     aria-label="Scroll categories right"
                 >

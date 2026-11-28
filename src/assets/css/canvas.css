@@ -1,3 +1,4 @@
+/* Editor workspace */
 .editor-container {
     flex: 1 1 0;
     min-width: 0;
@@ -10,14 +11,6 @@
     padding: 32px;
     justify-content: center;
     align-items: center;
-}
-
-.editor-toolbar {
-    flex-shrink: 0;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
 }
 
 .canvas-workspace {
@@ -43,6 +36,7 @@
 }
 
 
+/* Canvas zoom controls and dock */
 .canvas-zoom-control {
     position: relative;
     display: flex;
@@ -97,6 +91,7 @@
     }
 }
 
+/* Product mockup view switcher */
 .mockup-switcher {
     position: absolute;
     right: 320px;

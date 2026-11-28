@@ -135,8 +135,8 @@ const TextProperties = ({ showFontPicker }) => {
 						defaultValue="#FFFFFF"
 						aria-label="Text color"
 					/>
-					<span className="badge-percentage">#FFFFFF</span>
-					<div className="input-percentage">
+					<span className="percentage-badge">#FFFFFF</span>
+					<div className="percentage-badge input-percentage">
 						<input
 							type="number"
 							min="1"
@@ -196,8 +196,8 @@ const TextProperties = ({ showFontPicker }) => {
 						defaultValue="#FFFFFF"
 						aria-label="Text color"
 					/>
-					<span className="badge-percentage">#FFFFFF</span>
-					<div className="input-percentage">
+					<span className="percentage-badge">#FFFFFF</span>
+					<div className="percentage-badge input-percentage">
 						<input
 							type="number"
 							min="1"
