@@ -1,9 +1,9 @@
 /* Collapsible section shell; title and body use shared section styles. */
 .collapsible-section {
     background: var(--editor-hover);
-    border: 1px solid var(--editor-hover-strong);
-    border-radius: 10px;
-    padding: 10px;
+    border: 1px solid var(--editor-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);

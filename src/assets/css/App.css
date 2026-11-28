@@ -5,10 +5,7 @@
   width: 100vw;
   display: flex;
   position: relative;
-  background:
-    radial-gradient(circle at 78% 30%, var(--editor-glow-warm), transparent 38%),
-    radial-gradient(circle at 28% 75%, var(--editor-glow-cool), transparent 35%),
-    var(--editor-surface-deep);
+  background: var(--editor-workspace);
 }
 
 .app-theme-toggle {

@@ -151,6 +151,18 @@ src/
 
 ## Styling
 
+The editor uses **Modern Indonesian Creative Technology**: neutral surfaces,
+forest-green interaction states, and a small textile-inspired detail in the
+navigation. Ivory and muted gold are reserved for branding; terracotta is
+available for selective highlights. Roboto remains the UI font, while canvas
+font choices remain independent.
+
+Use the tokens in `tokens.css` rather than hard-coded values. Editor surfaces,
+text and interaction states use the `--editor-*` tokens; spacing, radii, shadows,
+control height and layer values are shared across components. Use the existing
+shared classes below before introducing a component-specific variant. Keep
+decorative patterns away from the canvas and preserve visible focus states.
+
 The [global stylesheet](./src/styles/global.css) is the shared entry point,
 loaded after Bootstrap in `src/main.jsx`. Its imports are in cascade order:
 

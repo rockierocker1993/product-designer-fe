@@ -4,6 +4,7 @@
     align-items: center;
     transition: background 0.15s;
     font-family: var(--font-base);
+    border-radius: var(--radius-md);
 }
 
 .font-item:hover,
@@ -21,8 +22,9 @@
     white-space: nowrap;
     background: transparent;
     border: none;
-    color: #d1d3d8;
+    color: var(--editor-text);
     line-height: 1.3;
     cursor: pointer;
-    font-size: 30px;
+    font-size: var(--font-size-lg);
+    padding: var(--space-2) var(--space-3);
 }

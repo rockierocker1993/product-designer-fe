@@ -117,7 +117,7 @@
 }
 
 .sidebar-tab-btn.active {
-  color: var(--editor-text-strong);
-  border-bottom-color: var(--editor-text-strong);
-  border-bottom-width: 1px;
+  color: var(--editor-accent);
+  border-bottom-color: var(--editor-accent);
+  border-bottom-width: 2px;
 }

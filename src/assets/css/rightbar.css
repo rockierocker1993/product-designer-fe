@@ -6,9 +6,7 @@
     flex: 0 0 clamp(200px, 32vw, 300px);
     display: flex;
     flex-direction: column;
-    background:
-        radial-gradient(circle at 12% -10%, var(--editor-glow-cool), transparent 42%),
-        var(--editor-card);
+    background: var(--editor-card);
     border-left: 1px solid var(--editor-border);
     max-width: 300px;
 }
